@@ -1,6 +1,8 @@
 package com.example.hpishepei.weatherapp.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -12,21 +14,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.hpishepei.weatherapp.Constants;
 import com.example.hpishepei.weatherapp.R;
 import com.example.hpishepei.weatherapp.model.Weather;
 import com.example.hpishepei.weatherapp.model.WeatherList;
 
-import org.apache.commons.io.IOUtils;
-
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class WeatherPageActivity extends AppCompatActivity {
 
-    private String NotationFlag = "C";
+    public static String NotationFlag;
+    public static Boolean AutoLocation;
 
     private TextView mCurrentCityTextView;
     private TextView mCurrentWeather;
@@ -43,19 +41,9 @@ public class WeatherPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
 
-
-        try {
-            URL url = new URL("http://api.wunderground.com/api/84d866aae1376b97/conditions/q/20009.json");
-            HttpURLConnection conn = (HttpURLConnection)  url.openConnection();
-            conn.setRequestMethod("GET");
-            System.out.println("Response Code: " + conn.getResponseCode());
-            InputStream in = new BufferedInputStream(conn.getInputStream());
-            String response = IOUtils.toString(in, "UTF-8");
-            System.out.println(response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        SharedPreferences sharedpreferences = getSharedPreferences(Constants.My_PREFERENCES, Context.MODE_PRIVATE);
+        NotationFlag = sharedpreferences.getString(Constants.NOTATION_SETTING, "C");
+        AutoLocation = sharedpreferences.getBoolean(Constants.AUTOLOCATION_SETTING, true);
 
 
 
@@ -160,4 +148,6 @@ public class WeatherPageActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }
