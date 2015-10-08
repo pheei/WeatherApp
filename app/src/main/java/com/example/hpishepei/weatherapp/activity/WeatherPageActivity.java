@@ -2,6 +2,13 @@ package com.example.hpishepei.weatherapp.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.hpishepei.weatherapp.R;
@@ -18,6 +25,7 @@ public class WeatherPageActivity extends AppCompatActivity {
     private TextView mCurrentWeather;
     private TextView mCurrentTemp;
     private TextView mTodaySummery;
+    private ListView mListView;
 
     ArrayList<Weather> mWeatherList;
 
@@ -29,8 +37,10 @@ public class WeatherPageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_weather_page);
 
 
+
         mWeatherList = WeatherList.getInstance(this).getmWeatherList();
         Weather today = mWeatherList.get(0);
+
 
 
         mCurrentCityTextView = (TextView)findViewById(R.id.current_city);
@@ -58,9 +68,73 @@ public class WeatherPageActivity extends AppCompatActivity {
 
 
 
+        mListView = (ListView)findViewById(R.id.list_container);
+        //ArrayAdapter<Weather> adapter = new ArrayAdapter<Weather>(this,android.R.layout.simple_list_item_1,mWeatherList);
+        WeatherListAdapter adapter = new WeatherListAdapter(mWeatherList);
+        mListView.setAdapter(adapter);
+
+
+
 
 
 
     }
 
+    private class WeatherListAdapter extends ArrayAdapter<Weather>{
+        public WeatherListAdapter(ArrayList<Weather> weatherList){
+            super(WeatherPageActivity.this, 0, mWeatherList);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null){
+                convertView = WeatherPageActivity.this.getLayoutInflater().inflate(R.layout.weather_list, null);
+            }
+
+
+            Weather weather = getItem(position);
+
+            TextView listWeekday = (TextView)convertView.findViewById(R.id.list_weekday);
+            listWeekday.setText(weather.getmWeekday());
+
+
+            ImageView listWeather = (ImageView)convertView.findViewById(R.id.list_weather);
+            listWeather.setImageResource(R.drawable.partlycloudy);
+
+            TextView listTemp = (TextView)convertView.findViewById(R.id.list_temp);
+            if (NotationFlag.equals("C")){
+                listTemp.setText(weather.getmLowestTempC()+"\u00B0 ~ "+weather.getmHighestTempC()+"\u00B0");
+            }
+            else if (NotationFlag.equals("F")){
+                listTemp.setText(weather.getmLowestTempF()+"\u00B0 ~ "+weather.getmHighestTempF()+"\u00B0");
+            }
+
+
+            return convertView;
+        }
+    }
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

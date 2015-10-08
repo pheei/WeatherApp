@@ -33,8 +33,10 @@ public class WeatherList {
             w.setmHighestTempC("30");
             w.setmLowestTempC("14");
             w.setmCityName("Washington, DC");
+            w.setmCurrentTempC("35" + "\u00B0");
             w.setmWeather("Cloudy");
             w.setmSummeryC("Partly cloudy in the morning, then clear. High of 68F. Breezy. Winds from the West at 10 to 25 mph.");
+            mWeatherList.add(w);
         }
     }
 
