@@ -1,5 +1,6 @@
 package com.example.hpishepei.weatherapp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -15,6 +16,12 @@ import com.example.hpishepei.weatherapp.R;
 import com.example.hpishepei.weatherapp.model.Weather;
 import com.example.hpishepei.weatherapp.model.WeatherList;
 
+import org.apache.commons.io.IOUtils;
+
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class WeatherPageActivity extends AppCompatActivity {
@@ -35,6 +42,20 @@ public class WeatherPageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
+
+
+        try {
+            URL url = new URL("http://api.wunderground.com/api/84d866aae1376b97/conditions/q/20009.json");
+            HttpURLConnection conn = (HttpURLConnection)  url.openConnection();
+            conn.setRequestMethod("GET");
+            System.out.println("Response Code: " + conn.getResponseCode());
+            InputStream in = new BufferedInputStream(conn.getInputStream());
+            String response = IOUtils.toString(in, "UTF-8");
+            System.out.println(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
 
 
@@ -132,6 +153,8 @@ public class WeatherPageActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent(WeatherPageActivity.this, SettingActivity.class);
+            startActivity(i);
             return true;
         }
 

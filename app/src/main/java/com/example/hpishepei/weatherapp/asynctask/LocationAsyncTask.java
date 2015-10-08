@@ -22,6 +22,12 @@ public class LocationAsyncTask extends AsyncTask<String, Integer, String> {
     private LocationManager mLocationManager;
     private Context mContext;
 
+    private LocationUpdateListener mLocationUpdateListener;
+
+    public interface LocationUpdateListener{
+        public void LocationUpdated(String location);
+        public void LocationUpdateFail();
+    }
 
     public LocationAsyncTask(Context context){
         mContext = context;
