@@ -22,7 +22,7 @@
             android:textColor="#FFFFFF" />
 
         <Button
-            android:id="@+id/fahrenheit_label"
+            android:id="@+id/fahrenheit_Button"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:text="@string/fahrenheit_label" 
@@ -30,6 +30,7 @@
             android:textColor="#FFFFFF"
             android:background="#808080" />
         <Button
+            android:id="@+id/celsius_Button"
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:text="@string/celsius_label"
@@ -76,10 +77,10 @@
         android:layout_height="wrap_content"
         android:text="@string/my_locations_label"/>
 
-    <FrameLayout
+    <ListView
         android:id="@+id/setting_list_container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"></FrameLayout>
+        android:layout_height="wrap_content"></ListView>
 
 
 </LinearLayout>

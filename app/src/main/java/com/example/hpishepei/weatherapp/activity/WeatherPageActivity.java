@@ -24,7 +24,7 @@ import java.util.ArrayList;
 public class WeatherPageActivity extends AppCompatActivity {
 
     public static String NotationFlag;
-    public static Boolean AutoLocation;
+    //public static Boolean AutoLocation;
 
     private TextView mCurrentCityTextView;
     private TextView mCurrentWeather;
@@ -43,7 +43,7 @@ public class WeatherPageActivity extends AppCompatActivity {
 
         SharedPreferences sharedpreferences = getSharedPreferences(Constants.My_PREFERENCES, Context.MODE_PRIVATE);
         NotationFlag = sharedpreferences.getString(Constants.NOTATION_SETTING, "C");
-        AutoLocation = sharedpreferences.getBoolean(Constants.AUTOLOCATION_SETTING, true);
+        //AutoLocation = sharedpreferences.getBoolean(Constants.AUTOLOCATION_SETTING, true);
 
 
 
@@ -90,7 +90,7 @@ public class WeatherPageActivity extends AppCompatActivity {
     }
 
     private class WeatherListAdapter extends ArrayAdapter<Weather>{
-        public WeatherListAdapter(ArrayList<Weather> weatherList){
+        public WeatherListAdapter(ArrayList<Weather> mWeatherList){
             super(WeatherPageActivity.this, 0, mWeatherList);
         }
 

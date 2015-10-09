@@ -2,12 +2,13 @@ package com.example.hpishepei.weatherapp.model;
 
 import android.content.Context;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by hpishepei on 10/8/15.
  */
-public class LocationList {
+public class LocationList implements Serializable{
 
 
     private static LocationList ourInstance;
