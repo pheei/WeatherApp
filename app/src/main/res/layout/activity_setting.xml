@@ -21,23 +21,35 @@
             android:layout_marginLeft="20dp"
             android:textColor="#FFFFFF" />
 
-        <Button
-            android:id="@+id/fahrenheit_Button"
-            android:layout_width="70dp"
+        <Switch
+            android:paddingTop="15dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/fahrenheit_label" 
-            android:layout_marginLeft="218dp"
+            android:textOff=" C\u00B0 "
+            android:textOn=" F\u00B0 "
+            android:textColorHint="#FFFFFF"
             android:textColor="#FFFFFF"
-            android:background="#808080" />
-        <Button
-            android:id="@+id/celsius_Button"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:text="@string/celsius_label"
-            android:layout_marginLeft="280dp"
-            android:textColor="#FFFFFF"
-            android:background="#808080" />
-        
+            android:textSize="20dp"
+            android:id="@+id/notation_switch"
+            android:layout_gravity="right|top" />
+        <!--
+                <Button
+                    android:id="@+id/fahrenheit_Button"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fahrenheit_label"
+                    android:layout_marginLeft="218dp"
+                    android:textColor="#FFFFFF"
+                    android:background="#808080" />
+                <Button
+                    android:id="@+id/celsius_Button"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/celsius_label"
+                    android:layout_marginLeft="280dp"
+                    android:textColor="#FFFFFF"
+                    android:background="#808080" />
+        -->
     </FrameLayout>
 
     <FrameLayout
@@ -52,6 +64,7 @@
             android:src="@drawable/search_icon"
             android:layout_marginLeft="20dp"
             />
+
         <EditText
             android:paddingLeft="60dp"
             android:layout_width="match_parent"
@@ -61,8 +74,9 @@
             android:textStyle="italic"
             android:textColorHint="#FFFFFF"/>
         <Button
+            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="25dp"
             android:text="@string/add_label"
             android:layout_gravity="right"
             android:textColor="#FFFFFF"

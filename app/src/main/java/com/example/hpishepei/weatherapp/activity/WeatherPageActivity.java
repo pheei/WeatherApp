@@ -1,10 +1,9 @@
 package com.example.hpishepei.weatherapp.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.hpishepei.weatherapp.Constants;
+import com.example.hpishepei.weatherapp.ChangePreferences;
 import com.example.hpishepei.weatherapp.R;
 import com.example.hpishepei.weatherapp.model.Weather;
 import com.example.hpishepei.weatherapp.model.WeatherList;
@@ -34,58 +33,42 @@ public class WeatherPageActivity extends AppCompatActivity {
 
     ArrayList<Weather> mWeatherList;
 
+    ChangePreferences preferences;
+
+    @Override
+    protected void onResume() {
+        /**
+        Log.i("lll","onResume!!!!!!");
+
+        preferences = new ChangePreferences(this);
+        NotationFlag = preferences.getNotationSetting();
+        Log.i("ccc",WeatherPageActivity.NotationFlag);
+        //notifyAll();
+
+        mTodaySummery = (TextView)findViewById(R.id.today_summery);
+        if (NotationFlag.equals("C")){
+            mTodaySummery.setText(mWeatherList.get(0).getmSummeryC());
+        }
+        else if (NotationFlag.equals("F")){
+            mTodaySummery.setText(mWeatherList.get(0).getmSummeryF());
+        }
+*/
+        super.onResume();
+        updateView();
+
+
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("lll", "onCreate!!!!!!");
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
 
-        SharedPreferences sharedpreferences = getSharedPreferences(Constants.My_PREFERENCES, Context.MODE_PRIVATE);
-        NotationFlag = sharedpreferences.getString(Constants.NOTATION_SETTING, "C");
-        //AutoLocation = sharedpreferences.getBoolean(Constants.AUTOLOCATION_SETTING, true);
-
-
-
-        mWeatherList = WeatherList.getInstance(this).getmWeatherList();
-        Weather today = mWeatherList.get(0);
-
-
-
-        mCurrentCityTextView = (TextView)findViewById(R.id.current_city);
-        mCurrentCityTextView.setText(today.getmCityName());
-
-        mCurrentWeather = (TextView)findViewById(R.id.current_weather);
-        mCurrentWeather.setText(today.getmWeather());
-
-        mCurrentTemp = (TextView)findViewById(R.id.current_temperature);
-        if (NotationFlag.equals("C")){
-            mCurrentTemp.setText(today.getmCurrentTempC());
-        }
-        else if (NotationFlag.equals("F")){
-            mCurrentTemp.setText(today.getmCurrentTempF());
-
-        }
-
-        mTodaySummery = (TextView)findViewById(R.id.today_summery);
-        if (NotationFlag.equals("C")){
-            mTodaySummery.setText(today.getmSummeryC());
-        }
-        else if (NotationFlag.equals("F")){
-            mTodaySummery.setText(today.getmSummeryF());
-        }
-
-
-
-        mListView = (ListView)findViewById(R.id.list_container);
-        //ArrayAdapter<Weather> adapter = new ArrayAdapter<Weather>(this,android.R.layout.simple_list_item_1,mWeatherList);
-        WeatherListAdapter adapter = new WeatherListAdapter(mWeatherList);
-        mListView.setAdapter(adapter);
-
-
-
-
-
+        updateView();
 
     }
 
@@ -147,6 +130,53 @@ public class WeatherPageActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public void updateView(){
+        preferences = new ChangePreferences(this);
+        NotationFlag = preferences.getNotationSetting();
+
+        //SharedPreferences sharedpreferences = getSharedPreferences(Constants.My_PREFERENCES, Context.MODE_PRIVATE);
+        //NotationFlag = sharedpreferences.getString(Constants.NOTATION_SETTING, "C");
+        //AutoLocation = sharedpreferences.getBoolean(Constants.AUTOLOCATION_SETTING, true);
+
+
+
+        mWeatherList = WeatherList.getInstance(this).getmWeatherList();
+        Weather today = mWeatherList.get(0);
+
+
+
+        mCurrentCityTextView = (TextView)findViewById(R.id.current_city);
+        mCurrentCityTextView.setText(today.getmCityName());
+
+        mCurrentWeather = (TextView)findViewById(R.id.current_weather);
+        mCurrentWeather.setText(today.getmWeather());
+
+        mCurrentTemp = (TextView)findViewById(R.id.current_temperature);
+        if (NotationFlag.equals("C")){
+            mCurrentTemp.setText(today.getmCurrentTempC());
+        }
+        else if (NotationFlag.equals("F")){
+            mCurrentTemp.setText(today.getmCurrentTempF());
+
+        }
+
+        mTodaySummery = (TextView)findViewById(R.id.today_summery);
+        if (NotationFlag.equals("C")){
+            mTodaySummery.setText(today.getmSummeryC());
+        }
+        else if (NotationFlag.equals("F")){
+            mTodaySummery.setText(today.getmSummeryF());
+        }
+
+
+
+        mListView = (ListView)findViewById(R.id.list_container);
+        //ArrayAdapter<Weather> adapter = new ArrayAdapter<Weather>(this,android.R.layout.simple_list_item_1,mWeatherList);
+        WeatherListAdapter adapter = new WeatherListAdapter(mWeatherList);
+        mListView.setAdapter(adapter);
     }
 
 
