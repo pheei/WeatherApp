@@ -2,14 +2,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#130837">
+    android:layout_height="match_parent">
 
     <ImageView
+        android:layout_marginTop="5dp"
         android:layout_marginLeft="15dp"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:src="@drawable/delete_icon"/>
+        android:src="@drawable/delete_icon_black"/>
 
     <TextView
         android:id="@+id/setting_city_name"
@@ -18,6 +18,6 @@
         android:layout_marginLeft="10dp"
         android:text="Here will be city name"
         android:textSize="20dp"
-        android:textColor="#FFFFFF"/>
+        />
 
 </LinearLayout>

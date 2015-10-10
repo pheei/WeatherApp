@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.hpishepei.weatherapp.ChangePreferences;
 import com.example.hpishepei.weatherapp.R;
 import com.example.hpishepei.weatherapp.model.Location;
+import com.example.hpishepei.weatherapp.model.LocationList;
 
 import java.util.ArrayList;
 
@@ -44,12 +45,14 @@ public class SettingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.print("onCreate!!!!!!");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_setting_page);
 
 
+        mLocationList = LocationList.getInstance(this).getmLocationList();
+
+        Log.i("lll",mLocationList.get(0).getmCity());
         preferences = new ChangePreferences(this);
 
         WeatherPageActivity.NotationFlag = preferences.getNotationSetting();
@@ -104,25 +107,26 @@ public class SettingActivity extends AppCompatActivity {
                 mFahrenheitButton.setBackgroundColor(Color.rgb(128,128,128));
             }
         });
-
-
+ */
         mListView = (ListView)findViewById(R.id.setting_list_container);
-        //ArrayAdapter<Weather> adapter = new ArrayAdapter<Weather>(this,android.R.layout.simple_list_item_1,mWeatherList);
+
+        //ArrayAdapter<Location> adapter = new ArrayAdapter<Location>(this,android.R.layout.simple_list_item_1,mLocationList);
         SettingListAdapter adapter = new SettingListAdapter(mLocationList);
         mListView.setAdapter(adapter);
-         */
+
+
     }
 
 
     private class SettingListAdapter extends ArrayAdapter<Location>{
-        public SettingListAdapter(ArrayList<Location> mLocaionList){
+        public SettingListAdapter(ArrayList<Location> mLocationList){
             super(SettingActivity.this, 0, mLocationList);
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null){
-                convertView = SettingActivity.this.getLayoutInflater().inflate(R.layout.weather_list, null);
+                convertView = SettingActivity.this.getLayoutInflater().inflate(R.layout.setting_list, null);
             }
 
 

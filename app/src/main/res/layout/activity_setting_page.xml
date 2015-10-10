@@ -1,16 +1,14 @@
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="#130837">
+    android:orientation="vertical">
 
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        
+
         <TextView
             android:id="@+id/units_label"
             android:paddingTop="10dp"
@@ -19,8 +17,7 @@
             android:textStyle="bold"
             android:textSize="25dp"
             android:text="@string/units_label"
-            android:layout_marginLeft="20dp"
-            android:textColor="#FFFFFF" />
+            android:layout_marginLeft="20dp" />
 
         <Switch
             android:paddingTop="15dp"
@@ -28,24 +25,39 @@
             android:layout_height="wrap_content"
             android:textOff=" C\u00B0 "
             android:textOn=" F\u00B0 "
-            android:textColorHint="#FFFFFF"
-            android:textColor="#FFFFFF"
             android:textSize="20dp"
             android:id="@+id/notation_switch"
             android:layout_gravity="right|top" />
-
+        <!--
+                <Button
+                    android:id="@+id/fahrenheit_Button"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fahrenheit_label"
+                    android:layout_marginLeft="218dp"
+                    android:textColor="#FFFFFF"
+                    android:background="#808080" />
+                <Button
+                    android:id="@+id/celsius_Button"
+                    android:layout_width="70dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/celsius_label"
+                    android:layout_marginLeft="280dp"
+                    android:textColor="#FFFFFF"
+                    android:background="#808080" />
+        -->
     </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp">
-        
+
         <ImageView
             android:layout_marginTop="8dp"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:src="@drawable/search_icon"
+            android:src="@drawable/search_icon_black"
             android:layout_marginLeft="20dp"
             />
 
@@ -54,9 +66,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search_hint"
-            android:textColor="#FFFFFF"
             android:textStyle="italic"
-            android:textColorHint="#FFFFFF"/>
+            />
         <Button
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
@@ -69,20 +80,23 @@
 
     </FrameLayout>
 
+
+
     <TextView
         android:layout_marginTop="15dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FFFFFF"
         android:text="@string/my_locations_label"/>
 
     <ListView
         android:id="@+id/setting_list_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
 
     </ListView>
+
 
 
 </LinearLayout>

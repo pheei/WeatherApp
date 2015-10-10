@@ -1,6 +1,10 @@
 package com.example.hpishepei.weatherapp.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,12 +19,13 @@ import android.widget.TextView;
 
 import com.example.hpishepei.weatherapp.ChangePreferences;
 import com.example.hpishepei.weatherapp.R;
+import com.example.hpishepei.weatherapp.asynctask.LocationAsyncTask;
 import com.example.hpishepei.weatherapp.model.Weather;
 import com.example.hpishepei.weatherapp.model.WeatherList;
 
 import java.util.ArrayList;
 
-public class WeatherPageActivity extends AppCompatActivity {
+public class WeatherPageActivity extends AppCompatActivity implements LocationAsyncTask.LocationUpdateListener{
 
     public static String NotationFlag;
     //public static Boolean AutoLocation;
@@ -177,7 +182,66 @@ public class WeatherPageActivity extends AppCompatActivity {
         //ArrayAdapter<Weather> adapter = new ArrayAdapter<Weather>(this,android.R.layout.simple_list_item_1,mWeatherList);
         WeatherListAdapter adapter = new WeatherListAdapter(mWeatherList);
         mListView.setAdapter(adapter);
+
+
+        //LocationAsyncTask asyncTask = new LocationAsyncTask(this);
+        //asyncTask.setmLocationUpdateListener(this);
+        //asyncTask.execute();
+
+
+        LocationManager mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        //String provider = mLocationManager.getBestProvider(criteria, false);
+
+        mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                Log.i("lll","11111111111");
+
+                String latitude = Double.toString(location.getLatitude());
+                String longtitude = Double.toString(location.getLongitude());
+                Log.i("lll","New Location: "+"latitude:"+latitude+" longtitude:"+longtitude);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        });
+
+
+
+
+        Location oldLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (oldLocation!=null){
+            String latitude = Double.toString(oldLocation.getLatitude());
+            String longtitude = Double.toString(oldLocation.getLongitude());
+            Log.i("lll","Old Location: "+"latitude:"+latitude+" longtitude:"+longtitude);
+        }
+
+
+
     }
 
 
+
+
+    @Override
+    public void LocationUpdated(String location) {
+
+    }
+
+    @Override
+    public void LocationUpdateFail() {
+
+    }
 }
