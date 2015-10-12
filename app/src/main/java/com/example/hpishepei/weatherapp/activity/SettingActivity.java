@@ -136,7 +136,6 @@ public class SettingActivity extends AppCompatActivity {
             cityName.setText(location.getmCity());
             return convertView;
         }
-
     }
 
 }

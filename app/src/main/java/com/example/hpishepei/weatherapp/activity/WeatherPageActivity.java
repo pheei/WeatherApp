@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -23,7 +24,6 @@ import android.widget.Toast;
 
 import com.example.hpishepei.weatherapp.ChangePreferences;
 import com.example.hpishepei.weatherapp.R;
-import com.example.hpishepei.weatherapp.asynctask.FetchCordinates;
 import com.example.hpishepei.weatherapp.asynctask.LocationAsyncTask;
 import com.example.hpishepei.weatherapp.model.Weather;
 import com.example.hpishepei.weatherapp.model.WeatherList;
@@ -33,6 +33,8 @@ import java.util.ArrayList;
 public class WeatherPageActivity extends AppCompatActivity implements LocationAsyncTask.LocationUpdateListener{
 
     public static String NotationFlag;
+    public static Double sLongitude = 0.0;
+    public static Double sLatitude = 0.0;
     //public static Boolean AutoLocation;
 
     private TextView mCurrentCityTextView;
@@ -40,6 +42,8 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationAs
     private TextView mCurrentTemp;
     private TextView mTodaySummery;
     private ListView mListView;
+    private Button mRefreshButton;
+
 
     ArrayList<Weather> mWeatherList;
 
@@ -72,8 +76,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationAs
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("lll", "onCreate!!!!!!");
-
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
@@ -190,6 +192,13 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationAs
         WeatherListAdapter adapter = new WeatherListAdapter(mWeatherList);
         mListView.setAdapter(adapter);
 
+        //GetLocationInfo getLocationInfo = new GetLocationInfo(this);
+        //getLocationInfo.FetchCordinates();
+
+        //GPSTracker gpsTracker = new GPSTracker(this);
+
+
+
         FetchCordinates fetchCordinates = new FetchCordinates();
         fetchCordinates.execute();
 
@@ -248,6 +257,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationAs
 
 
     }
+
 
 
     public class FetchCordinates extends AsyncTask<String, Integer, String> {
@@ -356,6 +366,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationAs
 
     }
 
+     
     @Override
     public void LocationUpdated(String location) {
 

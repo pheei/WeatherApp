@@ -10,5 +10,11 @@
     <string name="celsius_label">\u00B0C</string>
     <string name="search_hint">Enter zip code</string>
     <string name="add_label">Add</string>
+    <string name="location_update_cancel_label">Location update is cancelled.</string>
+    <string name="fail_label">Unable to get location!</string>
     <string name="my_locations_label">My Locations</string>
+    <string name="fetch_location_label">Fetching current location...</string>
+
+
+
 </resources>
