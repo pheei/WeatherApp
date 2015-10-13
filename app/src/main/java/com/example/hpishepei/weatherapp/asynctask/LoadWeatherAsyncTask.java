@@ -2,6 +2,7 @@ package com.example.hpishepei.weatherapp.asynctask;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.example.hpishepei.weatherapp.function.GetWeatherInfo;
 import com.google.gson.JsonObject;
@@ -43,7 +44,7 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
         }
 
-
+        Toast.makeText(mContext,info.toString(),Toast.LENGTH_SHORT).show();
         return null;
 
 

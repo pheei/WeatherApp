@@ -56,4 +56,8 @@ public class LocationList implements Serializable{
 
     }
 
+    public void deleteLocation(Location location){
+        mLocationList.remove(location);
+    }
+
 }

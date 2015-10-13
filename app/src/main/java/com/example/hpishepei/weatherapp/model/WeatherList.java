@@ -42,6 +42,7 @@ public class WeatherList {
         }
     }
 
+
     public ArrayList<Weather> getmWeatherList() {
         return mWeatherList;
     }

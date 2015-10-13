@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -54,11 +55,16 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_page);
+        updateView();
 
 
+    }
+
+
+
+    public void updateView(){
         mLocationList = LocationList.getInstance(this).getmLocationList();
 
-        Log.i("lll",mLocationList.get(0).getmCity());
         preferences = new ChangePreferences(this);
 
         WeatherPageActivity.NotationFlag = preferences.getNotationSetting();
@@ -80,7 +86,7 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
                 if (isChecked){
                     pref.setNotationSetting("F");
                     WeatherPageActivity.NotationFlag = "F";
-                    Log.i("ccc",WeatherPageActivity.NotationFlag);
+                    Log.i("ccc", WeatherPageActivity.NotationFlag);
                 }
                 else {
                     pref.setNotationSetting("C");
@@ -108,7 +114,7 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(SettingActivity.this, SettingActivity.this);
-                task.execute("geolookup",s.toString());
+                task.execute("geolookup", s.toString());
 
             }
 
@@ -117,19 +123,8 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
 
             }
         });
-
-
     }
 
-    @Override
-    public void updateCompleted() {
-
-    }
-
-    @Override
-    public void updateFail() {
-
-    }
 
 
     private class SettingListAdapter extends ArrayAdapter<Location>{
@@ -144,13 +139,38 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
             }
 
 
-            Location location = getItem(position);
+            final Location location = getItem(position);
 
             TextView cityName = (TextView)convertView.findViewById(R.id.setting_city_name);
             cityName.setText(location.getmCity());
+
+
+            ImageView deleteButton = (ImageView)convertView.findViewById(R.id.delete_button);
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    LocationList.getInstance(SettingActivity.this).deleteLocation(location);
+                    updateView();
+
+                }
+            });
+
+
             return convertView;
         }
     }
+
+    @Override
+    public void updateCompleted() {
+
+    }
+
+    @Override
+    public void updateFail() {
+
+    }
+
 
 }
 
