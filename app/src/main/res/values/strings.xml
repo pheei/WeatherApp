@@ -14,7 +14,7 @@
     <string name="fail_label">Unable to get location!</string>
     <string name="my_locations_label">My Locations</string>
     <string name="fetch_location_label">Fetching current location...</string>
-
+    <string name="refresh_label">refresh</string>
 
 
 </resources>
