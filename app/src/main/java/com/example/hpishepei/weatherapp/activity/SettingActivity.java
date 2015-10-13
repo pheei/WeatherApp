@@ -2,28 +2,34 @@ package com.example.hpishepei.weatherapp.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.example.hpishepei.weatherapp.ChangePreferences;
 import com.example.hpishepei.weatherapp.R;
+import com.example.hpishepei.weatherapp.asynctask.LoadWeatherAsyncTask;
 import com.example.hpishepei.weatherapp.model.Location;
 import com.example.hpishepei.weatherapp.model.LocationList;
 
 import java.util.ArrayList;
 
-public class SettingActivity extends AppCompatActivity {
+public class SettingActivity extends AppCompatActivity implements LoadWeatherAsyncTask.WeatherUpdateListener{
 
-    Switch mNotationSwitch;
-    ArrayList<Location> mLocationList;
-    ListView mListView;
-    ChangePreferences preferences;
+    private Switch mNotationSwitch;
+    private ArrayList<Location> mLocationList;
+    private ListView mListView;
+    private ChangePreferences preferences;
+
+    private EditText mZipEditText;
 
     @Override
     protected void onResume() {
@@ -86,34 +92,42 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-/**
-        mFahrenheitButton = (Button)findViewById(R.id.fahrenheit_Button);
-        mFahrenheitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WeatherPageActivity.NotationFlag = "F";
-                mFahrenheitButton.setBackgroundColor(Color.rgb(0, 128, 255));
-                mCelsiusButton.setBackgroundColor(Color.rgb(128, 128, 128));
-
-            }
-        });
-
-        mCelsiusButton = (Button)findViewById(R.id.celsius_Button);
-        mCelsiusButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                WeatherPageActivity.NotationFlag = "C";
-                mCelsiusButton.setBackgroundColor(Color.rgb(0,128,255));
-                mFahrenheitButton.setBackgroundColor(Color.rgb(128,128,128));
-            }
-        });
- */
         mListView = (ListView)findViewById(R.id.setting_list_container);
 
         //ArrayAdapter<Location> adapter = new ArrayAdapter<Location>(this,android.R.layout.simple_list_item_1,mLocationList);
         SettingListAdapter adapter = new SettingListAdapter(mLocationList);
         mListView.setAdapter(adapter);
 
+        mZipEditText = (EditText)findViewById(R.id.zip_enter_EditText);
+        mZipEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(SettingActivity.this, SettingActivity.this);
+                task.execute("geolookup",s.toString());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+    }
+
+    @Override
+    public void updateCompleted() {
+
+    }
+
+    @Override
+    public void updateFail() {
 
     }
 
