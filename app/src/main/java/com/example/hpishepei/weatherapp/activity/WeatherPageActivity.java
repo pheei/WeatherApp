@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.hpishepei.weatherapp.ChangePreferences;
 import com.example.hpishepei.weatherapp.R;
 import com.example.hpishepei.weatherapp.asynctask.LocationAsyncTask;
+import com.example.hpishepei.weatherapp.function.GetLocationInfo;
 import com.example.hpishepei.weatherapp.model.Weather;
 import com.example.hpishepei.weatherapp.model.WeatherList;
 
@@ -42,7 +43,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationAs
     private TextView mCurrentTemp;
     private TextView mTodaySummery;
     private ListView mListView;
-    private Button mRefreshButton;
+    private ImageView mRefreshButton;
 
 
     ArrayList<Weather> mWeatherList;
@@ -199,8 +200,18 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationAs
 
 
 
-        FetchCordinates fetchCordinates = new FetchCordinates();
-        fetchCordinates.execute();
+        //FetchCordinates fetchCordinates = new FetchCordinates();
+        //fetchCordinates.execute();
+
+
+        mRefreshButton = (ImageView)findViewById(R.id.refresh_Button);
+        mRefreshButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GetLocationInfo getLocationInfo = new GetLocationInfo(WeatherPageActivity.this);
+                getLocationInfo.FetchCordinates();
+            }
+        });
 
 
         //LocationAsyncTask asyncTask = new LocationAsyncTask(this);
