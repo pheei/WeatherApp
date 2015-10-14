@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +32,9 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
     private ChangePreferences preferences;
 
     private EditText mZipEditText;
+    private String mInputZip;
+
+    private Button mAddButton;
 
     @Override
     protected void onResume() {
@@ -104,6 +108,7 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
         SettingListAdapter adapter = new SettingListAdapter(mLocationList);
         mListView.setAdapter(adapter);
 
+
         mZipEditText = (EditText)findViewById(R.id.zip_enter_EditText);
         mZipEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -113,14 +118,21 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(SettingActivity.this, SettingActivity.this);
-                task.execute("geolookup", s.toString());
-
+                mInputZip = s.toString();
             }
 
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        mAddButton = (Button)findViewById(R.id.add_button);
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(SettingActivity.this,SettingActivity.this);
+                task.execute("geolookup",mInputZip);
             }
         });
     }
