@@ -1,9 +1,7 @@
 package com.example.hpishepei.weatherapp.function;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -13,9 +11,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.example.hpishepei.weatherapp.R;
 
 /**
  * Created by hpishepei on 10/13/15.
@@ -24,7 +19,6 @@ public class LocationFinder implements LocationListener {
     private static final String TAG = "LocationFinder";
     private Context mContext;
     private LocationDetector mLocationDetector;
-    private ProgressDialog mProgressDialog;
 
     private final int TIMEOUT_IN_MS = 10000; //10 second timeout
 
@@ -52,20 +46,6 @@ public class LocationFinder implements LocationListener {
         if(mIsDetectingLocation == false){
             mIsDetectingLocation = true;
 
-            mProgressDialog = new ProgressDialog(mContext);
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setCancelable(true);
-            mProgressDialog.setMessage(mContext.getString(R.string.fetch_location_label));
-            mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    mProgressDialog.dismiss();
-                    Toast.makeText(mContext, mContext.getString(R.string.location_update_cancel_label), Toast.LENGTH_SHORT).show();
-                    endLocationDetection();
-                }
-            });
-            mProgressDialog.show();
-
             if(mLocationManager == null){
                 mLocationManager = (LocationManager) mContext.getSystemService(Context.LOCATION_SERVICE);
             }
@@ -87,7 +67,6 @@ public class LocationFinder implements LocationListener {
 
     private void endLocationDetection(){
         if(mIsDetectingLocation) {
-            mProgressDialog.dismiss();
             mIsDetectingLocation = false;
 
             if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED || Build.VERSION.SDK_INT < 23) {
@@ -102,7 +81,6 @@ public class LocationFinder implements LocationListener {
             @Override
             public void run() {
                 if(mIsDetectingLocation){
-                    mProgressDialog.dismiss();
                     fallbackOnLastKnownLocation();
                 }
             }
@@ -127,7 +105,6 @@ public class LocationFinder implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        mProgressDialog.dismiss();
         mLocationDetector.locationFound(location);
     }
 

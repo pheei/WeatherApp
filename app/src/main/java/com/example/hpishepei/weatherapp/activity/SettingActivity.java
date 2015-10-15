@@ -21,6 +21,7 @@ import com.example.hpishepei.weatherapp.R;
 import com.example.hpishepei.weatherapp.asynctask.LoadWeatherAsyncTask;
 import com.example.hpishepei.weatherapp.model.Location;
 import com.example.hpishepei.weatherapp.model.LocationList;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
@@ -137,6 +138,15 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
         });
     }
 
+    @Override
+    public void updateCompleted(JsonObject jsonObject, String flag) {
+
+    }
+
+    @Override
+    public void updateFail() {
+
+    }
 
 
     private class SettingListAdapter extends ArrayAdapter<Location>{
@@ -173,15 +183,7 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
         }
     }
 
-    @Override
-    public void updateCompleted() {
 
-    }
-
-    @Override
-    public void updateFail() {
-
-    }
 
 
 }

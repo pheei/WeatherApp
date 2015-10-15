@@ -17,21 +17,20 @@ import android.widget.Toast;
 
 import com.example.hpishepei.weatherapp.ChangePreferences;
 import com.example.hpishepei.weatherapp.R;
-import com.example.hpishepei.weatherapp.asynctask.LoadWeatherAsyncTask;
-import com.example.hpishepei.weatherapp.function.GetInfoFromJson;
+import com.example.hpishepei.weatherapp.asynctask.LoadInfoAsyncTask;
 import com.example.hpishepei.weatherapp.function.LocationFinder;
-import com.example.hpishepei.weatherapp.model.Weather;
+import com.example.hpishepei.weatherapp.model.Forecast;
 import com.example.hpishepei.weatherapp.model.WeatherInfo;
-import com.example.hpishepei.weatherapp.model.WeatherList;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
-public class WeatherPageActivity extends AppCompatActivity implements LocationFinder.LocationDetector,LoadWeatherAsyncTask.WeatherUpdateListener{
+public class WeatherPageActivity extends AppCompatActivity implements LocationFinder.LocationDetector,LoadInfoAsyncTask.WeatherUpdateListener{
 
     public static String NotationFlag;
-    public static Double sLongitude = 0.0;
-    public static Double sLatitude = 0.0;
+    public Double mLongitude;
+    public Double mLatitude;
+    private String mCoordinate;
 
     private JsonObject mJsonObject;
     private JsonObject mGeoJson;
@@ -39,24 +38,28 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     private JsonObject mForecastJson;
     private JsonObject mHourlyJson;
 
+    private TextView mUpdateTime;
     private TextView mCurrentCityTextView;
     private TextView mCurrentWeather;
     private TextView mCurrentTemp;
     private TextView mTodaySummery;
     private ListView mListView;
+    private TextView mWind;
+    private TextView mFeels;
+    private TextView mUV;
+    private TextView mHumidity;
+    private TextView mPreHr;
+    private TextView mPreDay;
 
 
-    private WeatherInfo mWeatherInfor;
-
-    //ArrayList<Weather> mWeatherList;
-
+    private WeatherInfo mWeatherInfo;
     ChangePreferences preferences;
 
     @Override
     protected void onResume() {
 
         super.onResume();
-        updateView();
+        //updateView();
 
 
     }
@@ -65,42 +68,96 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
 
 
-        updateInfoAuto();
-        //updateView();
+        //mWeatherInfo = WeatherInfo.getInstance(this);
+
+        LocationFinder locationFinder = new LocationFinder(this,this);
+        locationFinder.detectLocation();
+
 
     }
 
-    private void updateInfoAuto(){
-        mWeatherInfor = WeatherInfo.getInstance(this);
-        LocationFinder location = new LocationFinder(this,this);
-        location.detectLocation();
+    /**
+    private void updateAllInfo(){
+        mCoordinate = Double.toString(mLatitude)+","+Double.toString(mLongitude);
+        Log.i("lll","2");
 
-        String cordinate = sLatitude+","+sLongitude;
+        updateGeoInfo();
+    }
+
+    private void updateGeoInfo(){
+        Log.i("lll","3");
+
         LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(this,this);
+        task.execute("geolookup", mCoordinate);
+    }
 
-        task.execute("geolookup",cordinate);
+    private void updateConditionInfo(){
+        Log.i("lll","4");
+
+        LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(this,this);
+        task.execute("conditions",mCoordinate );
+    }
+
+
+    private void updateHourlyForecastInfo(){
+        LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(this,this);
+        task.execute("hourly", mCoordinate);
+    }
+
+    private void updateForecastInfo(){
+        LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(this,this);
+        task.execute("forecast", mCoordinate);
+    }
+
+    private void updateInfoAuto(){
+        String coordinate = mLatitude +","+ mLongitude;
+
+        mWeatherInfo = WeatherInfo.getInstance(this);
+
+        LoadWeatherAsyncTask task1 = new LoadWeatherAsyncTask(this,this);
+
+        Log.i("lll",coordinate );
+
+        task1.execute("geolookup", coordinate);
+
+
+        /**
         mGeoJson = mJsonObject;
+
+
         String city = GetInfoFromJson.getCityNameFromJSON(mGeoJson);
+
         String zip = GetInfoFromJson.getZipFromJSON(mGeoJson);
+
         mWeatherInfor.setmCity(city);
+
         mWeatherInfor.setmZip(zip);
 
-        task.execute("conditions", cordinate);
+
+        LoadWeatherAsyncTask task2 = new LoadWeatherAsyncTask(this,this);
+
+        task2.execute("conditions",coordinate );
         mConditionJson = mJsonObject;
-        GetInfoFromJson.setCurrentCondition(this,mConditionJson);
+        GetInfoFromJson.setCurrentCondition(this, mConditionJson);
 
-        task.execute("hourly", cordinate);
+        LoadWeatherAsyncTask task3 = new LoadWeatherAsyncTask(this,this);
+
+        task3.execute("hourly", coordinate);
         mHourlyJson = mJsonObject;
-        GetInfoFromJson.setHourlyForecast(this,mHourlyJson);
+        GetInfoFromJson.setHourlyForecast(this, mHourlyJson);
 
-        task.execute("forecast", cordinate);
+        LoadWeatherAsyncTask task4 = new LoadWeatherAsyncTask(this,this);
+
+        task4.execute("forecast", coordinate);
         mForecastJson = mJsonObject;
-        GetInfoFromJson.setForecast(this,mForecastJson);
+        GetInfoFromJson.setForecast(this, mForecastJson);
 
+         */
 
         /**
         mCondition = mJsonObject;
@@ -118,13 +175,14 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         mWeatherInfor.setmCurrentPreHrMetric(GetInfoFromJson.getCurrentPreHrMetric(mCondition));
 
          */
-    }
+   // }
 
 
 
-    private class WeatherListAdapter extends ArrayAdapter<Weather>{
-        public WeatherListAdapter(ArrayList<Weather> mWeatherList){
-            super(WeatherPageActivity.this, 0, mWeatherList);
+
+    private class ForecastListAdapter extends ArrayAdapter<Forecast>{
+        public ForecastListAdapter(ArrayList<Forecast> forecasts){
+            super(WeatherPageActivity.this, 0, forecasts);
         }
 
         @Override
@@ -134,21 +192,22 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
             }
 
 
-            Weather weather = getItem(position);
+            Forecast forecast = getItem(position);
 
             TextView listWeekday = (TextView)convertView.findViewById(R.id.list_weekday);
-            listWeekday.setText(weather.getmWeekday());
+            listWeekday.setText(forecast.getmWeekday());
 
 
+            //TODO: load image
             ImageView listWeather = (ImageView)convertView.findViewById(R.id.list_weather);
             listWeather.setImageResource(R.drawable.partlycloudy);
 
             TextView listTemp = (TextView)convertView.findViewById(R.id.list_temp);
             if (NotationFlag.equals("C")){
-                listTemp.setText(weather.getmLowestTempC()+"\u00B0 ~ "+weather.getmHighestTempC()+"\u00B0");
+                listTemp.setText(forecast.getmLowestTempC()+"\u00B0 ~ "+forecast.getmHighestTempC()+"\u00B0");
             }
             else if (NotationFlag.equals("F")){
-                listTemp.setText(weather.getmLowestTempF()+"\u00B0 ~ "+weather.getmHighestTempF()+"\u00B0");
+                listTemp.setText(forecast.getmLowestTempF()+"\u00B0 ~ "+forecast.getmHighestTempF()+"\u00B0");
             }
 
 
@@ -195,58 +254,82 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         preferences = new ChangePreferences(this);
         NotationFlag = preferences.getNotationSetting();
 
+        WeatherInfo info = WeatherInfo.getInstance(this);
 
-
-        mWeatherList = WeatherList.getInstance(this).getmWeatherList();
-        Weather today = mWeatherList.get(0);
-
-
+        mUpdateTime = (TextView)findViewById(R.id.updated_time_TextView);
+        mUpdateTime.setText(info.getmCurrentUpdateTime());
 
         mCurrentCityTextView = (TextView)findViewById(R.id.current_city);
-        mCurrentCityTextView.setText(today.getmCityName());
+        mCurrentCityTextView.setText(info.getmCity());
 
         mCurrentWeather = (TextView)findViewById(R.id.current_weather);
-        mCurrentWeather.setText(today.getmWeather());
+        mCurrentWeather.setText(info.getmCurrentCondition());
 
         mCurrentTemp = (TextView)findViewById(R.id.current_temperature);
         if (NotationFlag.equals("C")){
-            mCurrentTemp.setText(today.getmCurrentTempC());
+            mCurrentTemp.setText(info.getmCurrentTempC());
         }
         else if (NotationFlag.equals("F")){
-            mCurrentTemp.setText(today.getmCurrentTempF());
+            mCurrentTemp.setText(info.getmCurrentTempF());
 
         }
 
-        mTodaySummery = (TextView)findViewById(R.id.today_summery);
+        mWind = (TextView)findViewById(R.id.current_wind);
+        mWind.setText(info.getmCurrentWind());
+
+        mFeels = (TextView)findViewById(R.id.current_feelslike);
         if (NotationFlag.equals("C")){
-            mTodaySummery.setText(today.getmSummeryC());
+            mFeels.setText(info.getmCurrentFeelsC());
         }
         else if (NotationFlag.equals("F")){
-            mTodaySummery.setText(today.getmSummeryF());
+            mFeels.setText(info.getmCurrentFeelsF());
         }
 
+        mUV = (TextView)findViewById(R.id.current_solar);
+        mUV.setText(info.getmCurrentUV());
+
+        mHumidity = (TextView)findViewById(R.id.current_humidity);
+        mHumidity.setText(info.getmCurrentHumidity());
+
+        mPreHr = (TextView)findViewById(R.id.current_1hr_rain);
+        if (NotationFlag.equals("C")){
+            mPreHr.setText(info.getmCurrentPreHrMetric());
+        }
+        else if (NotationFlag.equals("F")){
+            mPreHr.setText(info.getmCurrentPreHrIn());
+        }
+
+        mPreDay = (TextView)findViewById(R.id.current_day_rain);
+        if (NotationFlag.equals("C")){
+            mPreHr.setText(info.getmCurrentPreDayMetric());
+        }
+        else if (NotationFlag.equals("F")){
+            mPreHr.setText(info.getmCurrentPreDayIn());
+        }
 
 
         mListView = (ListView)findViewById(R.id.list_container);
-        //ArrayAdapter<Weather> adapter = new ArrayAdapter<Weather>(this,android.R.layout.simple_list_item_1,mWeatherList);
-        WeatherListAdapter adapter = new WeatherListAdapter(mWeatherList);
+        ArrayList<Forecast> forecasts = new ArrayList<Forecast>();
+        for (Forecast i : info.getmForecastList()){
+            forecasts.add(i);
+        }
+        ForecastListAdapter adapter = new ForecastListAdapter(forecasts);
         mListView.setAdapter(adapter);
-
-
-
-
-
 
 
     }
 
 
+
     @Override
     public void locationFound(Location location) {
-        sLongitude = location.getLongitude();
-        sLatitude = location.getLatitude();
-        Toast.makeText(this,this.getString(R.string.location_founded_label),Toast.LENGTH_SHORT).show();
+        mLongitude = location.getLongitude();
+        mLatitude = location.getLatitude();
+        mCoordinate = Double.toString(mLatitude)+","+Double.toString(mLongitude);
+        Log.i("lll", mCoordinate);
+        updateInfo();
 
+        //updateAllInfo();
     }
 
     @Override
@@ -256,10 +339,60 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
     }
 
+    public void updateInfo(){
+        LoadInfoAsyncTask task = new LoadInfoAsyncTask(this,this);
+        task.execute(mCoordinate);
+    }
 
     @Override
-    public void updateCompleted(JsonObject jsonObject) {
-        mJsonObject = jsonObject;
+    public void updateCompleted(JsonObject geo, JsonObject condition, JsonObject forecast, JsonObject hourly) {
+        mGeoJson = geo;
+        mConditionJson = condition;
+        mForecastJson = forecast;
+        mHourlyJson = hourly;
+        Log.i("lll", "update done");
+        //updateView();
+    }
+
+    @Override
+    public void updateFail() {
+        Log.i("lll", "update fail");
+
+
+    }
+
+    /*
+    @Override
+    public void updateCompleted(JsonObject jsonObject, String flag) {
+
+        switch (flag){
+            case "geolookup":
+                mJsonObject = jsonObject;
+                String city = GetInfoFromJson.getCityNameFromJSON(mGeoJson);
+                String zip = GetInfoFromJson.getZipFromJSON(mGeoJson);
+                mWeatherInfo.setmCity(city);
+                mWeatherInfo.setmZip(zip);
+                updateConditionInfo();
+
+                break;
+            case "conditions":
+                mConditionJson = mJsonObject;
+                GetInfoFromJson.setCurrentCondition(this, mConditionJson);
+                updateHourlyForecastInfo();
+                break;
+            case "hourly":
+                mHourlyJson = mJsonObject;
+                GetInfoFromJson.setHourlyForecast(this, mHourlyJson);
+                updateForecastInfo();
+                break;
+            case "forecast":
+                mForecastJson = mJsonObject;
+                GetInfoFromJson.setForecast(this, mForecastJson);
+                updateView();
+                break;
+        }
+
+
     }
 
     @Override
@@ -267,6 +400,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         Log.i("lll","get infor fail");
     }
 
-
+*/
 
 }
