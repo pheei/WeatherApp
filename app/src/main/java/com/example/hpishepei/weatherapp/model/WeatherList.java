@@ -1,14 +1,11 @@
 package com.example.hpishepei.weatherapp.model;
 
-import android.content.Context;
-
-import java.util.ArrayList;
-
 /**
  * Created by hpishepei on 10/7/15.
  */
 public class WeatherList {
 
+    /**
     private static WeatherList ourInstance;
     private Context mContext;
     private ArrayList<Weather> mWeatherList;
@@ -46,4 +43,5 @@ public class WeatherList {
     public ArrayList<Weather> getmWeatherList() {
         return mWeatherList;
     }
+     */
 }

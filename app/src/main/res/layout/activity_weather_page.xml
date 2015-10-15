@@ -6,9 +6,19 @@
     android:orientation="vertical"
     android:background="@drawable/background">
 
+    <TextView
+        android:id="@+id/updated_time_TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:text="Last Updated on October 14, 6:35 PM EDT"
+        android:layout_gravity="center_horizontal"
+        android:textSize="11dp"
+        android:textStyle="italic" />
+
 
     <TextView
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/current_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,12 +44,83 @@
         android:id="@+id/current_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:text="30\u00B0"
         android:textColor="#FFFFFF"
         android:textSize="50dp"
         android:layout_gravity="center_horizontal"/>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/current_wind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wind: calm"
+            android:textColor="#FFFFFF"
+            />
+        <TextView
+            android:id="@+id/current_feelslike"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feels like: 30\u00B0"
+            android:textColor="#FFFFFF"
+            android:layout_toRightOf="@id/current_wind"
+
+            />
+
+        <TextView
+            android:id="@+id/current_solar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UV Index: 15"
+            android:textColor="#FFFFFF"
+            android:layout_toRightOf="@id/current_feelslike"
+
+            />
+
+
+        <TextView
+            android:id="@+id/current_humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="humidity: 30%"
+            android:textColor="#FFFFFF"
+            android:layout_alignLeft="@id/current_wind"
+            />
+
+        <TextView
+            android:id="@+id/current_1hr_rain"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Precip-1hr: 0 in"
+            android:textColor="#FFFFFF"
+            android:layout_alignLeft="@id/current_feelslike"
+            />
+
+        <TextView
+            android:id="@+id/current_day_rain"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Precip-today: 0 in"
+            android:textColor="#FFFFFF"
+            android:layout_alignLeft="@id/current_solar"
+
+            />
+
+
+
+    </RelativeLayout>
+
+    <!--
     <TextView
         android:id="@+id/today_summery"
         android:layout_width="match_parent"
@@ -48,6 +129,8 @@
         android:paddingRight="30dp"
         android:textColor="#FFFFFF"
         android:text="Partly cloudy in the morning, then clear. High of 68F. Breezy. Winds from the West at 10 to 25 mph."/>
+        -->
+
 
 
 
@@ -58,6 +141,15 @@
         android:layout_marginTop="30dp">
 
     </ListView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textColor="#FFFFFF"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"
+        android:textSize="18dp" />
 
 </LinearLayout>
 
