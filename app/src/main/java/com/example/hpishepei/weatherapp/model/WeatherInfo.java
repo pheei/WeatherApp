@@ -169,4 +169,20 @@ public class WeatherInfo {
     public void setmCurrentUpdateTime(String mCurrentUpdateTime) {
         this.mCurrentUpdateTime = mCurrentUpdateTime;
     }
+
+    public Forecast[] getmForecastList() {
+        return mForecastList;
+    }
+
+    public void setmForecastList(Forecast[] mForecastList) {
+        this.mForecastList = mForecastList;
+    }
+
+    public HourlyForecast[] getmHourlyForecastList() {
+        return mHourlyForecastList;
+    }
+
+    public void setmHourlyForecastList(HourlyForecast[] mHourlyForecastList) {
+        this.mHourlyForecastList = mHourlyForecastList;
+    }
 }

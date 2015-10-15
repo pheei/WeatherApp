@@ -70,7 +70,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
 
         updateInfoAuto();
-        updateView();
+        //updateView();
 
     }
 
@@ -93,8 +93,14 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         mConditionJson = mJsonObject;
         GetInfoFromJson.setCurrentCondition(this,mConditionJson);
 
+        task.execute("hourly", cordinate);
+        mHourlyJson = mJsonObject;
+        GetInfoFromJson.setHourlyForecast(this,mHourlyJson);
+
         task.execute("forecast", cordinate);
         mForecastJson = mJsonObject;
+        GetInfoFromJson.setForecast(this,mForecastJson);
+
 
         /**
         mCondition = mJsonObject;

@@ -2,6 +2,8 @@ package com.example.hpishepei.weatherapp.function;
 
 import android.content.Context;
 
+import com.example.hpishepei.weatherapp.model.Forecast;
+import com.example.hpishepei.weatherapp.model.HourlyForecast;
 import com.example.hpishepei.weatherapp.model.WeatherInfo;
 import com.google.gson.JsonObject;
 import com.koushikdutta.ion.Ion;
@@ -55,19 +57,61 @@ public class GetInfoFromJson {
         info.setmCurrentHumidity(result.get(3));
         info.setmCurrentWind(result.get(4));
         info.setmCurrentTempF(result.get(5) + "°");
-        info.setmCurrentTempC(result.get(6)+"°");
+        info.setmCurrentTempC(result.get(6) + "°");
         info.setmCurrentUV(result.get(7));
-        info.setmCurrentPreHrIn(result.get(8)+" inch");
-        info.setmCurrentPreDayMetric(result.get(9)+" mm");
+        info.setmCurrentPreHrIn(result.get(8) + " inch");
+        info.setmCurrentPreDayMetric(result.get(9) + " mm");
         info.setmCurrentPreDayMetric(result.get(10)+" mm");
-        info.setmCurrentPreDayIn(result.get(11)+" inch");
+        info.setmCurrentPreDayIn(result.get(11) + " inch");
         info.setmCurrentUpdateTime(result.get(12));
     }
 
 
+    public static void setHourlyForecast(Context context, JsonObject jsonObject){
+        WeatherInfo info = WeatherInfo.getInstance(context);
+        HourlyForecast[] list = info.getmHourlyForecastList();
+        String s = "";
+        for (int i = 0; i<list.length; i++){
+            s = jsonObject.getAsJsonArray("hourly_forecast").get(i).getAsJsonObject().getAsJsonObject("FCTTIME").get("hour").toString();
+            list[i].setmTime(s);
+            s = jsonObject.getAsJsonArray("hourly_forecast").get(i).getAsJsonObject().getAsJsonObject("temp").get("english").toString();
+            list[i].setmTempF(s);
+            s = jsonObject.getAsJsonArray("hourly_forecast").get(i).getAsJsonObject().getAsJsonObject("temp").get("metric").toString();
+            list[i].setmTempC(s);
+            s = jsonObject.getAsJsonArray("hourly_forecast").get(i).getAsJsonObject().get("icon_url").toString();
+            list[i].setmIconUrl(s);
+        }
+    }
+
     public static void setForecast(Context context, JsonObject jsonObject){
         WeatherInfo info = WeatherInfo.getInstance(context);
+        Forecast[] list = info.getmForecastList();
+        String s = "";
+        for (int i = 0; i<list.length; i++){
+            s = jsonObject.getAsJsonObject("forecast").getAsJsonObject("txt_forecast").getAsJsonArray("forecastday").get(i*2).getAsJsonObject().get("title").toString();
+            list[i].setmWeekday(s);
+            s = jsonObject.getAsJsonObject("forecast").getAsJsonObject("txt_forecast").getAsJsonArray("forecastday").get(i*2).getAsJsonObject().get("fcttext").toString();
+            list[i].setmDescriptionF(s);
+            s = jsonObject.getAsJsonObject("forecast").getAsJsonObject("txt_forecast").getAsJsonArray("forecastday").get(i*2).getAsJsonObject().get("fcttext_metric").toString();
+            list[i].setmDescriptionC(s);
+            //s = jsonObject.getAsJsonObject("forecast").getAsJsonObject("txt_forecast").getAsJsonArray("forecastday").get(i*2).getAsJsonObject().get("icon_url").toString();
+            //list[i].setmIconUrl(s);
 
+            s = jsonObject.getAsJsonObject("forecast").getAsJsonObject("simpleforecast").getAsJsonArray("forecastday").get(i).getAsJsonObject().getAsJsonObject("high").get("fahrenheit").toString();
+            list[i].setmHighestTempF(s);
+            s = jsonObject.getAsJsonObject("forecast").getAsJsonObject("simpleforecast").getAsJsonArray("forecastday").get(i).getAsJsonObject().getAsJsonObject("high").get("celsius").toString();
+            list[i].setmHighestTempC(s);
+            s = jsonObject.getAsJsonObject("forecast").getAsJsonObject("simpleforecast").getAsJsonArray("forecastday").get(i).getAsJsonObject().getAsJsonObject("low").get("fahrenheit").toString();
+            list[i].setmLowestTempF(s);
+            s = jsonObject.getAsJsonObject("forecast").getAsJsonObject("simpleforecast").getAsJsonArray("forecastday").get(i).getAsJsonObject().getAsJsonObject("low").get("celsius").toString();
+            list[i].setmLowestTempC(s);
+            s = jsonObject.getAsJsonObject("forecast").getAsJsonObject("simpleforecast").getAsJsonArray("forecastday").get(i).getAsJsonObject().get("icon_url").toString();
+            list[i].setmIconUrl(s);
+
+
+
+
+        }
     }
 
     /**
