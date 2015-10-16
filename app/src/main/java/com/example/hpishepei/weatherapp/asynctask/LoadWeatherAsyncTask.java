@@ -11,11 +11,16 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by hpishepei on 10/7/15.
  */
-public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, JsonObject> {
+public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
 
 
     private Context mContext;
+    private JsonObject mGeo;
+    private JsonObject mCon;
+    private JsonObject mFore;
+    private JsonObject mHourly;
     private WeatherUpdateListener mWeatherUpdateListener;
+    private String mFlag;
 
 
     public LoadWeatherAsyncTask(Context context, WeatherUpdateListener weatherUpdateListener) {
@@ -24,31 +29,29 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, JsonObject>
     }
 
     public interface WeatherUpdateListener{
-        public void updateCompleted(JsonObject jsonObject);
+        public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson, JsonObject hourlyJson);
         public void updateFail();
     }
 
 
     @Override
-    protected void onPostExecute(JsonObject jsonObject) {
-        super.onPostExecute(jsonObject);
-        if (jsonObject.get("error")==null){
-            mWeatherUpdateListener.updateCompleted(jsonObject);
-        }
-        else {
-            mWeatherUpdateListener.updateFail();
-        }
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        mWeatherUpdateListener.updateCompleted(mGeo,mCon,mFore,mHourly);
     }
 
     @Override
-    protected JsonObject doInBackground(String... params) {
-        String feature = params[0];
-        String input = params[1];
-        JsonObject info = new JsonObject();
+    protected String doInBackground(String... params) {
+        String input = params[0];
+
 
         try {
 
-            info = GetInfoFromJson.getInfoByFeature(feature, input, mContext);
+            mGeo = GetInfoFromJson.getInfoByFeature("geolookup", input, mContext);
+            mCon = GetInfoFromJson.getInfoByFeature("conditions", input, mContext);
+            mFore = GetInfoFromJson.getInfoByFeature("forecast", input, mContext);
+            mHourly = GetInfoFromJson.getInfoByFeature("hourly", input, mContext);
+
 
         } catch (ExecutionException e) {
             e.printStackTrace();
@@ -56,7 +59,7 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, JsonObject>
             e.printStackTrace();
         }
 
-        return info;
+        return null;
 
 
 

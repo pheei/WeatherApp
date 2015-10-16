@@ -138,15 +138,6 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
         });
     }
 
-    @Override
-    public void updateCompleted(JsonObject jsonObject, String flag) {
-
-    }
-
-    @Override
-    public void updateFail() {
-
-    }
 
 
     private class SettingListAdapter extends ArrayAdapter<Location>{
@@ -184,6 +175,17 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
     }
 
 
+
+
+    @Override
+    public void updateCompleted(JsonObject jsonObject1, JsonObject jsonObject2, JsonObject jsonObject3, JsonObject jsonObject4) {
+
+    }
+
+    @Override
+    public void updateFail() {
+
+    }
 
 
 }
