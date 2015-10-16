@@ -21,6 +21,7 @@ import com.example.hpishepei.weatherapp.R;
 import com.example.hpishepei.weatherapp.asynctask.LoadWeatherAsyncTask;
 import com.example.hpishepei.weatherapp.model.Location;
 import com.example.hpishepei.weatherapp.model.LocationList;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
@@ -173,8 +174,11 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
         }
     }
 
+
+
+
     @Override
-    public void updateCompleted() {
+    public void updateCompleted(JsonObject jsonObject1, JsonObject jsonObject2, JsonObject jsonObject3, JsonObject jsonObject4) {
 
     }
 

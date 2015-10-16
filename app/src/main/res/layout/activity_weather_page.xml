@@ -11,7 +11,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#FFFFFF"
-        android:text="Last Updated on October 14, 6:35 PM EDT"
         android:layout_gravity="center_horizontal"
         android:textSize="11dp"
         android:textStyle="italic" />
@@ -22,7 +21,6 @@
         android:id="@+id/current_city"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Washington DC"
         android:layout_gravity="center_horizontal"
         android:textStyle="bold"
         android:textSize="20dp"
@@ -36,7 +34,6 @@
         android:id="@+id/current_weather"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sunny"
         android:layout_gravity="center_horizontal"
         android:textColor="#FFFFFF"/>
 
@@ -44,8 +41,6 @@
         android:id="@+id/current_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="30\u00B0"
         android:textColor="#FFFFFF"
         android:textSize="50dp"
         android:layout_gravity="center_horizontal"/>
@@ -57,31 +52,35 @@
 
         <TextView
             android:id="@+id/current_wind"
+            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wind: calm"
             android:textColor="#FFFFFF"
+            android:textSize="13dp"
+            android:textStyle="bold"
             />
         <TextView
             android:id="@+id/current_feelslike"
             android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Feels like: 30\u00B0"
             android:textColor="#FFFFFF"
             android:layout_toRightOf="@id/current_wind"
+            android:textStyle="bold"
+            android:textSize="13dp"
 
             />
 
         <TextView
             android:id="@+id/current_solar"
+            android:layout_marginRight="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UV Index: 15"
             android:textColor="#FFFFFF"
             android:layout_toRightOf="@id/current_feelslike"
-
+            android:textStyle="bold"
+            android:textSize="13dp"
             />
 
 
@@ -90,9 +89,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="humidity: 30%"
             android:textColor="#FFFFFF"
             android:layout_alignLeft="@id/current_wind"
+            android:textStyle="bold"
+            android:textSize="13dp"
             />
 
         <TextView
@@ -100,9 +100,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Precip-1hr: 0 in"
             android:textColor="#FFFFFF"
             android:layout_alignLeft="@id/current_feelslike"
+            android:textStyle="bold"
+            android:textSize="13dp"
             />
 
         <TextView
@@ -110,10 +111,10 @@
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Precip-today: 0 in"
             android:textColor="#FFFFFF"
             android:layout_alignLeft="@id/current_solar"
-
+            android:textStyle="bold"
+            android:textSize="13dp"
             />
 
 
@@ -137,7 +138,7 @@
     <ListView
         android:id="@+id/list_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="30dp">
 
     </ListView>

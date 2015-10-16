@@ -10,8 +10,8 @@ public class WeatherInfo {
     private static WeatherInfo ourInstance;
     private Context mContext;
 
-    private Forecast[] mForecastList = new Forecast[4];
-    private HourlyForecast[] mHourlyForecastList = new HourlyForecast[24];
+    private Forecast[] mForecastList;
+    private HourlyForecast[] mHourlyForecastList;
 
     private String mCity;
     private String mZip;
@@ -39,13 +39,18 @@ public class WeatherInfo {
 
 
     private WeatherInfo(Context c) {
+
         mContext = c;
+        mForecastList = new Forecast[4];
+        mHourlyForecastList = new HourlyForecast[4];
+
     }
 
     public static WeatherInfo getInstance(Context c)
     {
         if (ourInstance == null){
             ourInstance = new WeatherInfo(c.getApplicationContext());
+
         }
         return ourInstance;
     }

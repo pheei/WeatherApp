@@ -10,7 +10,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -73,7 +72,7 @@ public class LocationFinder implements LocationListener {
 
             if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED || Build.VERSION.SDK_INT < 23) {
                 mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
-                startTimer();
+                //startTimer();
             }
             else {
                 endLocationDetection();
@@ -96,6 +95,7 @@ public class LocationFinder implements LocationListener {
         }
     }
 
+    /**
     private void startTimer(){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -109,6 +109,7 @@ public class LocationFinder implements LocationListener {
         }, TIMEOUT_IN_MS);
 
     }
+     */
 
     private void fallbackOnLastKnownLocation(){
         Location lastKnownLocation = null;
@@ -129,6 +130,7 @@ public class LocationFinder implements LocationListener {
     public void onLocationChanged(Location location) {
         mProgressDialog.dismiss();
         mLocationDetector.locationFound(location);
+
     }
 
     @Override

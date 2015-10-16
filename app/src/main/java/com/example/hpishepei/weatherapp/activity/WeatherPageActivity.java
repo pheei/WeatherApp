@@ -20,9 +20,8 @@ import com.example.hpishepei.weatherapp.R;
 import com.example.hpishepei.weatherapp.asynctask.LoadWeatherAsyncTask;
 import com.example.hpishepei.weatherapp.function.GetInfoFromJson;
 import com.example.hpishepei.weatherapp.function.LocationFinder;
-import com.example.hpishepei.weatherapp.model.Weather;
+import com.example.hpishepei.weatherapp.model.Forecast;
 import com.example.hpishepei.weatherapp.model.WeatherInfo;
-import com.example.hpishepei.weatherapp.model.WeatherList;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -32,6 +31,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     public static String NotationFlag;
     public static Double sLongitude = 0.0;
     public static Double sLatitude = 0.0;
+    public String mCoordinate;
 
     private JsonObject mJsonObject;
     private JsonObject mGeoJson;
@@ -39,10 +39,19 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     private JsonObject mForecastJson;
     private JsonObject mHourlyJson;
 
+    private TextView mUpdateTimeTextView;
     private TextView mCurrentCityTextView;
     private TextView mCurrentWeather;
     private TextView mCurrentTemp;
-    private TextView mTodaySummery;
+    private TextView mCurrentWind;
+    private TextView mCurrentFeel;
+    private TextView mCurrentUV;
+    private TextView mCurrentHumidity;
+    private TextView mCurrentPreHr;
+    private TextView mCurrentPreDay;
+
+
+
     private ListView mListView;
 
 
@@ -56,7 +65,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     protected void onResume() {
 
         super.onResume();
-        updateView();
+        //updateView();
 
 
     }
@@ -67,9 +76,13 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
+        mWeatherInfor = WeatherInfo.getInstance(this);
+
+        LocationFinder locationFinder = new LocationFinder(this,this);
+        locationFinder.detectLocation();
 
 
-        updateInfoAuto();
+        //updateInfoAuto();
         //updateView();
 
     }
@@ -121,43 +134,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     }
 
 
-
-    private class WeatherListAdapter extends ArrayAdapter<Weather>{
-        public WeatherListAdapter(ArrayList<Weather> mWeatherList){
-            super(WeatherPageActivity.this, 0, mWeatherList);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null){
-                convertView = WeatherPageActivity.this.getLayoutInflater().inflate(R.layout.weather_list, null);
-            }
-
-
-            Weather weather = getItem(position);
-
-            TextView listWeekday = (TextView)convertView.findViewById(R.id.list_weekday);
-            listWeekday.setText(weather.getmWeekday());
-
-
-            ImageView listWeather = (ImageView)convertView.findViewById(R.id.list_weather);
-            listWeather.setImageResource(R.drawable.partlycloudy);
-
-            TextView listTemp = (TextView)convertView.findViewById(R.id.list_temp);
-            if (NotationFlag.equals("C")){
-                listTemp.setText(weather.getmLowestTempC()+"\u00B0 ~ "+weather.getmHighestTempC()+"\u00B0");
-            }
-            else if (NotationFlag.equals("F")){
-                listTemp.setText(weather.getmLowestTempF()+"\u00B0 ~ "+weather.getmHighestTempF()+"\u00B0");
-            }
-
-
-            return convertView;
-        }
-    }
-
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -191,52 +167,111 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
 
 
+
     public void updateView(){
         preferences = new ChangePreferences(this);
         NotationFlag = preferences.getNotationSetting();
 
+        mWeatherInfor = WeatherInfo.getInstance(this);
 
-
-        mWeatherList = WeatherList.getInstance(this).getmWeatherList();
-        Weather today = mWeatherList.get(0);
-
-
+        mUpdateTimeTextView = (TextView)findViewById(R.id.updated_time_TextView);
+        mUpdateTimeTextView.setText(mWeatherInfor.getmCurrentUpdateTime());
 
         mCurrentCityTextView = (TextView)findViewById(R.id.current_city);
-        mCurrentCityTextView.setText(today.getmCityName());
+        mCurrentCityTextView.setText(mWeatherInfor.getmCity());
 
         mCurrentWeather = (TextView)findViewById(R.id.current_weather);
-        mCurrentWeather.setText(today.getmWeather());
+        mCurrentWeather.setText(mWeatherInfor.getmCurrentCondition());
 
         mCurrentTemp = (TextView)findViewById(R.id.current_temperature);
         if (NotationFlag.equals("C")){
-            mCurrentTemp.setText(today.getmCurrentTempC());
+            mCurrentTemp.setText(mWeatherInfor.getmCurrentTempC());
         }
         else if (NotationFlag.equals("F")){
-            mCurrentTemp.setText(today.getmCurrentTempF());
-
+            mCurrentTemp.setText(mWeatherInfor.getmCurrentTempF());
         }
 
-        mTodaySummery = (TextView)findViewById(R.id.today_summery);
+        mCurrentWind = (TextView)findViewById(R.id.current_wind);
+        mCurrentWind.setText("Wind: " + mWeatherInfor.getmCurrentWind());;
+
+        mCurrentFeel = (TextView)findViewById(R.id.current_feelslike);
         if (NotationFlag.equals("C")){
-            mTodaySummery.setText(today.getmSummeryC());
+            mCurrentFeel.setText("Feels like: " + mWeatherInfor.getmCurrentFeelsC());
         }
         else if (NotationFlag.equals("F")){
-            mTodaySummery.setText(today.getmSummeryF());
+            mCurrentFeel.setText("Feels like: " + mWeatherInfor.getmCurrentFeelsF());
         }
+
+        mCurrentUV = (TextView)findViewById(R.id.current_solar);
+        mCurrentUV.setText("UV index: " + mWeatherInfor.getmCurrentUV());
+
+        mCurrentHumidity = (TextView)findViewById(R.id.current_humidity);
+        mCurrentHumidity.setText("Humidity: " + mWeatherInfor.getmCurrentHumidity());
+
+        mCurrentPreHr = (TextView)findViewById(R.id.current_1hr_rain);
+        if (NotationFlag.equals("C")){
+            mCurrentPreHr.setText("Rain 1hr: " + mWeatherInfor.getmCurrentPreHrMetric());
+        }
+        else if (NotationFlag.equals("F")){
+            mCurrentPreHr.setText("Rain 1hr: " + mWeatherInfor.getmCurrentPreHrIn());
+        }
+
+        mCurrentPreDay = (TextView)findViewById(R.id.current_day_rain);
+        if (NotationFlag.equals("C")){
+            mCurrentPreDay.setText("Rain today: " + mWeatherInfor.getmCurrentPreDayMetric());
+        }
+        else if (NotationFlag.equals("F")){
+            mCurrentPreDay.setText("Rain today: " + mWeatherInfor.getmCurrentPreDayIn());
+        }
+
 
 
 
         mListView = (ListView)findViewById(R.id.list_container);
+        ArrayList<Forecast> forecasts = new ArrayList<Forecast>();
+        for (Forecast i : mWeatherInfor.getmForecastList()){
+            forecasts.add(i);
+        }
         //ArrayAdapter<Weather> adapter = new ArrayAdapter<Weather>(this,android.R.layout.simple_list_item_1,mWeatherList);
-        WeatherListAdapter adapter = new WeatherListAdapter(mWeatherList);
+        WeatherListAdapter adapter = new WeatherListAdapter(forecasts);
         mListView.setAdapter(adapter);
 
 
+    }
 
 
+    private class WeatherListAdapter extends ArrayAdapter<Forecast> {
+        public WeatherListAdapter(ArrayList<Forecast> forecasts){
+            super(WeatherPageActivity.this, 0, forecasts);
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null){
+                convertView = WeatherPageActivity.this.getLayoutInflater().inflate(R.layout.weather_list, null);
+            }
 
 
+            Forecast forecast = getItem(position);
+
+            TextView listWeekday = (TextView)convertView.findViewById(R.id.list_weekday);
+            listWeekday.setText(forecast.getmWeekday());
+
+
+            ImageView listWeather = (ImageView)convertView.findViewById(R.id.list_weather);
+            listWeather.setImageResource(R.drawable.partlycloudy);
+
+            TextView listTemp = (TextView)convertView.findViewById(R.id.list_temp);
+            if (NotationFlag.equals("C")){
+                listTemp.setText(forecast.getmLowestTempC()+"\u00B0 ~ "+forecast.getmHighestTempC()+"\u00B0");
+            }
+            else if (NotationFlag.equals("F")){
+                listTemp.setText(forecast.getmLowestTempF()+"\u00B0 ~ "+forecast.getmHighestTempF()+"\u00B0");
+            }
+
+
+            return convertView;
+        }
 
     }
 
@@ -245,7 +280,10 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     public void locationFound(Location location) {
         sLongitude = location.getLongitude();
         sLatitude = location.getLatitude();
-        Toast.makeText(this,this.getString(R.string.location_founded_label),Toast.LENGTH_SHORT).show();
+        mCoordinate = Double.toString(sLatitude)+","+Double.toString(sLongitude);
+        Log.i("lll",Double.toString(sLatitude)+","+Double.toString(sLongitude));
+        LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(this,this);
+        task.execute(mCoordinate);
 
     }
 
@@ -258,8 +296,26 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
 
     @Override
-    public void updateCompleted(JsonObject jsonObject) {
-        mJsonObject = jsonObject;
+    public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson, JsonObject hourlyJson) {
+        Log.i("lll",geoJson.toString());
+        Log.i("lll",conditionJson.toString());
+        Log.i("lll", forecastJson.toString());
+        Log.i("lll", hourlyJson.toString());
+
+        mWeatherInfor.setmCity(GetInfoFromJson.getCityNameFromJSON(geoJson));
+        mWeatherInfor.setmZip(GetInfoFromJson.getZipFromJSON(geoJson));
+        GetInfoFromJson.setCurrentCondition(this, conditionJson);
+        GetInfoFromJson.setForecast(this, forecastJson);
+        GetInfoFromJson.setHourlyForecast(this, hourlyJson);
+
+        Log.i("lll", "done!!!!!!");
+        updateView();
+
+
+
+
+
+
     }
 
     @Override
