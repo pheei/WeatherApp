@@ -1,5 +1,6 @@
 package com.example.hpishepei.weatherapp.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
@@ -35,6 +36,8 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
 
     private EditText mZipEditText;
     private String mInputZip;
+    private Boolean mIsStateChanged;
+    public static final String EXTRA_STATE_CHANGE = "com.example.hpishepei.weatherapp.settingactivity.result";
 
     private Button mAddButton;
 
@@ -62,6 +65,7 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_page);
+        setStateChangeResult(false);
         updateView();
 
 
@@ -90,6 +94,7 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 ChangePreferences pref = new ChangePreferences(SettingActivity.this);
+                setStateChangeResult(true);
                 if (isChecked){
                     pref.setNotationSetting("F");
                     WeatherPageActivity.NotationFlag = "F";
@@ -176,6 +181,12 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
         }
     }
 
+    private void setStateChangeResult(boolean isStateChanged){
+        Intent i = new Intent();
+        i.putExtra(EXTRA_STATE_CHANGE,isStateChanged);
+        setResult(RESULT_OK,i);
+
+    }
 
     @Override
     public void updateCompleted(JsonObject jsonObject1, JsonObject jsonObject2, JsonObject jsonObject3, JsonObject jsonObject4) {

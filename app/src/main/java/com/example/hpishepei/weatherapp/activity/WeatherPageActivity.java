@@ -32,6 +32,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     public static String NotationFlag;
     public static Double sLongitude = 0.0;
     public static Double sLatitude = 0.0;
+    private boolean mHasInfo;
     public String mCoordinate;
 
     private JsonObject mJsonObject;
@@ -81,6 +82,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
 
+        mHasInfo = false;
         mWeatherInfor = WeatherInfo.getInstance(this);
         LocationFinder locationFinder = new LocationFinder(this,this);
         locationFinder.detectLocation();
@@ -330,6 +332,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         GetInfoFromJson.setHourlyForecast(this, hourlyJson);
 
         Log.i("lll", "done!!!!!!");
+        mHasInfo = true;
         updateView();
 
 
@@ -344,6 +347,13 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         Log.i("lll","get infor fail");
     }
 
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null){
+            return;
+        }
+        if (mHasInfo == true && data.getBooleanExtra(SettingActivity.EXTRA_STATE_CHANGE,false)){
+            updateView();
+        }
+    }
 }
