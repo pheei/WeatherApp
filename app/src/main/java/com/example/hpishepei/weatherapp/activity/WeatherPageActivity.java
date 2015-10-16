@@ -1,5 +1,7 @@
 package com.example.hpishepei.weatherapp.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
@@ -32,6 +34,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     public static String NotationFlag;
     public static Double sLongitude = 0.0;
     public static Double sLatitude = 0.0;
+    private boolean mHasInfo;
     public String mCoordinate;
 
     private JsonObject mJsonObject;
@@ -52,6 +55,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     private TextView mCurrentPreDay;
     private TextView mDescription;
 
+    private ProgressDialog mPrograssDialog;
 
 
     private ListView mListView;
@@ -81,6 +85,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
 
+        mHasInfo = false;
         mWeatherInfor = WeatherInfo.getInstance(this);
         LocationFinder locationFinder = new LocationFinder(this,this);
         locationFinder.detectLocation();
@@ -303,7 +308,23 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         sLatitude = location.getLatitude();
         mCoordinate = Double.toString(sLatitude)+","+Double.toString(sLongitude);
         Log.i("lll",Double.toString(sLatitude)+","+Double.toString(sLongitude));
+
+
+
         LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(this,this);
+
+        mPrograssDialog = new ProgressDialog(this);
+        mPrograssDialog.setIndeterminate(true);
+        mPrograssDialog.setMessage(this.getString(R.string.fetch_weatherinfo_label));
+        mPrograssDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                mPrograssDialog.dismiss();
+                Toast.makeText(WeatherPageActivity.this,WeatherPageActivity.this.getString(R.string.weatherinfo_update_cancel_label),Toast.LENGTH_SHORT).show();
+            }
+        });
+        mPrograssDialog.show();
+
         task.execute(mCoordinate);
 
     }
@@ -330,12 +351,9 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         GetInfoFromJson.setHourlyForecast(this, hourlyJson);
 
         Log.i("lll", "done!!!!!!");
+        mHasInfo = true;
         updateView();
-
-
-
-
-
+        mPrograssDialog.dismiss();
 
     }
 
@@ -344,6 +362,13 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         Log.i("lll","get infor fail");
     }
 
-
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (data == null){
+            return;
+        }
+        if (mHasInfo == true && data.getBooleanExtra(SettingActivity.EXTRA_STATE_CHANGE,false)){
+            updateView();
+        }
+    }
 }
