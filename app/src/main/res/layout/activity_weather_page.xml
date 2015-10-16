@@ -144,13 +144,15 @@
     </ListView>
 
     <TextView
+        android:id="@+id/description_TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Description"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="10dp"
         android:textColor="#FFFFFF"
-        android:gravity="center_horizontal"
-        android:textStyle="bold"
-        android:textSize="18dp" />
+        android:textSize="15dp"
+        android:textStyle="bold"/>
 
 </LinearLayout>
 

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 
 public class SettingActivity extends AppCompatActivity implements LoadWeatherAsyncTask.WeatherUpdateListener{
 
+
     private Switch mNotationSwitch;
     private ArrayList<Location> mLocationList;
     private ListView mListView;
@@ -36,6 +37,7 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
     private String mInputZip;
 
     private Button mAddButton;
+
 
     @Override
     protected void onResume() {
@@ -173,8 +175,6 @@ public class SettingActivity extends AppCompatActivity implements LoadWeatherAsy
             return convertView;
         }
     }
-
-
 
 
     @Override

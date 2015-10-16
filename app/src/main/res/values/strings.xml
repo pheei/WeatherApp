@@ -16,6 +16,7 @@
     <string name="fetch_location_label">Fetching current location...</string>
     <string name="refresh_label">refresh</string>
     <string name="location_founded_label">Location found!</string>
+    <string name="description_hint">Click an above weekday for summery!</string>
 
 
 </resources>

@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -49,6 +50,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     private TextView mCurrentHumidity;
     private TextView mCurrentPreHr;
     private TextView mCurrentPreDay;
+    private TextView mDescription;
 
 
 
@@ -65,6 +67,8 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     protected void onResume() {
 
         super.onResume();
+
+
         //updateView();
 
 
@@ -76,11 +80,10 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
-        mWeatherInfor = WeatherInfo.getInstance(this);
 
+        mWeatherInfor = WeatherInfo.getInstance(this);
         LocationFinder locationFinder = new LocationFinder(this,this);
         locationFinder.detectLocation();
-
 
         //updateInfoAuto();
         //updateView();
@@ -151,11 +154,13 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent i = new Intent(WeatherPageActivity.this, SettingActivity.class);
-            startActivity(i);
+            startActivityForResult(i,0);
+
+            //startActivity(i);
             return true;
         }
         else if (id == R.id.refresh_button){
-            LocationFinder locationFinder = new LocationFinder(WeatherPageActivity.this,WeatherPageActivity.this);
+            LocationFinder locationFinder = new LocationFinder(this,this);
             locationFinder.detectLocation();
             return true;
 
@@ -235,6 +240,22 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         //ArrayAdapter<Weather> adapter = new ArrayAdapter<Weather>(this,android.R.layout.simple_list_item_1,mWeatherList);
         WeatherListAdapter adapter = new WeatherListAdapter(forecasts);
         mListView.setAdapter(adapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Forecast forecast = new Forecast();
+                forecast = (Forecast) parent.getItemAtPosition(position);
+                mDescription = (TextView) findViewById(R.id.description_TextView);
+                if (NotationFlag.equals("C")) {
+                    mDescription.setText(forecast.getmWeekday() + " brief: " + forecast.getmDescriptionC());
+                } else if (NotationFlag.equals("F")) {
+                    mDescription.setText(forecast.getmWeekday() + " brief: " + forecast.getmDescriptionF());
+                }
+            }
+        });
+        mDescription = (TextView)findViewById(R.id.description_TextView);
+        mDescription.setText(this.getString(R.string.description_hint));
+
 
 
     }
