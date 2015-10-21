@@ -31,6 +31,19 @@ import java.util.ArrayList;
 
 public class WeatherPageActivity extends AppCompatActivity implements LocationFinder.LocationDetector,LoadWeatherAsyncTask.WeatherUpdateListener{
 
+    /**
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (!WeatherInfo.sIsNull){
+            outState.putSerializable(KEY_INDEX, WeatherInfo.getInstance(this));
+        }
+
+    }
+    */
+
+
+    private static final String KEY_INDEX = "index";
     public static String NotationFlag;
     public static Double sLongitude = 0.0;
     public static Double sLatitude = 0.0;
@@ -63,7 +76,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
     private WeatherInfo mWeatherInfor;
 
-    //ArrayList<Weather> mWeatherList;
 
     ChangePreferences preferences;
 
@@ -71,12 +83,17 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     protected void onResume() {
 
         super.onResume();
-
-
-        //updateView();
+        if (!WeatherInfo.sIsNull){
+            mWeatherInfor = WeatherInfo.getInstance(this);
+            updateView();
+        }
+        else {
+            newUpdate();
+        }
 
 
     }
+
 
 
     @Override
@@ -85,62 +102,58 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
 
-        mHasInfo = false;
-        mWeatherInfor = WeatherInfo.getInstance(this);
-        LocationFinder locationFinder = new LocationFinder(this,this);
-        locationFinder.detectLocation();
-
-        //updateInfoAuto();
-        //updateView();
-
-    }
-
-    private void updateInfoAuto(){
-        mWeatherInfor = WeatherInfo.getInstance(this);
-        LocationFinder location = new LocationFinder(this,this);
-        location.detectLocation();
-
-        String cordinate = sLatitude+","+sLongitude;
-        LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(this,this);
-
-        task.execute("geolookup",cordinate);
-        mGeoJson = mJsonObject;
-        String city = GetInfoFromJson.getCityNameFromJSON(mGeoJson);
-        String zip = GetInfoFromJson.getZipFromJSON(mGeoJson);
-        mWeatherInfor.setmCity(city);
-        mWeatherInfor.setmZip(zip);
-
-        task.execute("conditions", cordinate);
-        mConditionJson = mJsonObject;
-        GetInfoFromJson.setCurrentCondition(this,mConditionJson);
-
-        task.execute("hourly", cordinate);
-        mHourlyJson = mJsonObject;
-        GetInfoFromJson.setHourlyForecast(this,mHourlyJson);
-
-        task.execute("forecast", cordinate);
-        mForecastJson = mJsonObject;
-        GetInfoFromJson.setForecast(this,mForecastJson);
-
 
         /**
-        mCondition = mJsonObject;
-        mWeatherInfor.setmCurrentCondition(GetInfoFromJson.getCurrentCondition(mCondition));
-        mWeatherInfor.setmCurrentTempC(GetInfoFromJson.getCurrentTempC(mCondition));
-        mWeatherInfor.setmCurrentTempF(GetInfoFromJson.getCurrentTempF(mCondition));
-        mWeatherInfor.setmCurrentHumidity(GetInfoFromJson.getCurrentHumidity(mCondition));
-        mWeatherInfor.setmCurrentWind(GetInfoFromJson.getCurrentWind(mCondition));
-        mWeatherInfor.setmCurrentFeelsC(GetInfoFromJson.getCurrentFeelsC(mCondition));
-        mWeatherInfor.setmCurrentFeelsF(GetInfoFromJson.getCurrentFeelsF(mCondition));
-        mWeatherInfor.setmCurrentUV(GetInfoFromJson.getCurrentUV(mCondition));
-        mWeatherInfor.setmCurrentPreDayIn(GetInfoFromJson.getCurrentPreDayIn(mCondition));
-        mWeatherInfor.setmCurrentPreDayMetric(GetInfoFromJson.getCurrentPreDayMetric(mCondition));
-        mWeatherInfor.setmCurrentPreHrIn(GetInfoFromJson.getCurrentPreHrIn(mCondition));
-        mWeatherInfor.setmCurrentPreHrMetric(GetInfoFromJson.getCurrentPreHrMetric(mCondition));
+        if (savedInstanceState != null){
+
+            if (savedInstanceState.getSerializable(KEY_INDEX)!=null){
+                WeatherInfo.setInstance((WeatherInfo) savedInstanceState.getSerializable(KEY_INDEX));
+
+            }
+        }
 
          */
+
+        /**
+        if (savedInstanceState != null){
+            Log.i("lll","have instance");
+
+            if (savedInstanceState.getSerializable(KEY_INDEX)!=null){
+                Log.i("lll","here1");
+
+                WeatherInfo.setInstance((WeatherInfo) savedInstanceState.getSerializable(KEY_INDEX));
+                mWeatherInfor = WeatherInfo.getInstance(this);
+                updateView();
+            }
+        }
+        else {
+
+            newUpdate();
+
+        }
+
+*/
+
     }
 
+    private void newUpdate(){
+        mHasInfo = false;
+        mWeatherInfor = WeatherInfo.getInstance(this);
+        mPrograssDialog = new ProgressDialog(this);
+        mPrograssDialog.setIndeterminate(true);
+        mPrograssDialog.setMessage(this.getString(R.string.fetch_location_label));
+        mPrograssDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                mPrograssDialog.dismiss();
+                Toast.makeText(WeatherPageActivity.this, WeatherPageActivity.this.getString(R.string.location_update_cancel_label), Toast.LENGTH_SHORT).show();
+            }
+        });
+        mPrograssDialog.show();
+
+        LocationFinder locationFinder = new LocationFinder(this,this);
+        locationFinder.detectLocation();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,8 +178,9 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
             return true;
         }
         else if (id == R.id.refresh_button){
-            LocationFinder locationFinder = new LocationFinder(this,this);
-            locationFinder.detectLocation();
+            newUpdate();
+            //LocationFinder locationFinder = new LocationFinder(this,this);
+            //locationFinder.detectLocation();
             return true;
 
         }
@@ -182,7 +196,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         preferences = new ChangePreferences(this);
         NotationFlag = preferences.getNotationSetting();
 
-        mWeatherInfor = WeatherInfo.getInstance(this);
+        //mWeatherInfor = WeatherInfo.getInstance(this);
 
         mUpdateTimeTextView = (TextView)findViewById(R.id.updated_time_TextView);
         mUpdateTimeTextView.setText(mWeatherInfor.getmCurrentUpdateTime());
@@ -235,14 +249,11 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         }
 
 
-
-
         mListView = (ListView)findViewById(R.id.list_container);
         ArrayList<Forecast> forecasts = new ArrayList<Forecast>();
         for (Forecast i : mWeatherInfor.getmForecastList()){
             forecasts.add(i);
         }
-        //ArrayAdapter<Weather> adapter = new ArrayAdapter<Weather>(this,android.R.layout.simple_list_item_1,mWeatherList);
         WeatherListAdapter adapter = new WeatherListAdapter(forecasts);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -304,6 +315,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
     @Override
     public void locationFound(Location location) {
+        mPrograssDialog.dismiss();
         sLongitude = location.getLongitude();
         sLatitude = location.getLatitude();
         mCoordinate = Double.toString(sLatitude)+","+Double.toString(sLongitude);
@@ -331,7 +343,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
     @Override
     public void locationNotFound(LocationFinder.FailureReason failureReason) {
-        Toast.makeText(this,this.getString(R.string.fail_label),Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,this.getString(R.string.location_fail_label),Toast.LENGTH_SHORT).show();
 
 
     }
@@ -339,10 +351,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
     @Override
     public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson, JsonObject hourlyJson) {
-        Log.i("lll",geoJson.toString());
-        Log.i("lll",conditionJson.toString());
-        Log.i("lll", forecastJson.toString());
-        Log.i("lll", hourlyJson.toString());
 
         mWeatherInfor.setmCity(GetInfoFromJson.getCityNameFromJSON(geoJson));
         mWeatherInfor.setmZip(GetInfoFromJson.getZipFromJSON(geoJson));
@@ -352,6 +360,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
         Log.i("lll", "done!!!!!!");
         mHasInfo = true;
+        mWeatherInfor = WeatherInfo.getInstance(this);
         updateView();
         mPrograssDialog.dismiss();
 
@@ -359,7 +368,9 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
     @Override
     public void updateFail() {
+
         Log.i("lll","get infor fail");
+        Toast.makeText(this,R.string.weather_fail_label,Toast.LENGTH_SHORT).show();
     }
 
     @Override

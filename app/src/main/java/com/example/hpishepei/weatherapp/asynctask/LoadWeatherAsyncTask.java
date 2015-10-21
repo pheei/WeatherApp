@@ -2,6 +2,7 @@ package com.example.hpishepei.weatherapp.asynctask;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
 
 import com.example.hpishepei.weatherapp.function.GetInfoFromJson;
 import com.google.gson.JsonObject;
@@ -21,6 +22,10 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
     private JsonObject mHourly;
     private WeatherUpdateListener mWeatherUpdateListener;
     private String mFlag;
+    private boolean mIsFetchingInfo = false;
+
+    private final int TIMEOUT_IN_MS = 10000; //10 second timeout
+
 
 
     public LoadWeatherAsyncTask(Context context, WeatherUpdateListener weatherUpdateListener) {
@@ -43,10 +48,11 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
     @Override
     protected String doInBackground(String... params) {
         String input = params[0];
+        mIsFetchingInfo = true;
 
 
         try {
-
+            //startTimer();
             mGeo = GetInfoFromJson.getInfoByFeature("geolookup", input, mContext);
             mCon = GetInfoFromJson.getInfoByFeature("conditions", input, mContext);
             mFore = GetInfoFromJson.getInfoByFeature("forecast", input, mContext);
@@ -59,10 +65,22 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
             e.printStackTrace();
         }
 
+        mIsFetchingInfo = false;
         return null;
 
 
+    }
 
+    private void startTimer(){
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if(mIsFetchingInfo){
+                    mWeatherUpdateListener.updateFail();
+                }
+            }
+        }, TIMEOUT_IN_MS);
 
     }
 }

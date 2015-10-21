@@ -1,9 +1,11 @@
 package com.example.hpishepei.weatherapp.model;
 
+import java.io.Serializable;
+
 /**
  * Created by hpishepei on 10/14/15.
  */
-public class HourlyForecast {
+public class HourlyForecast implements Serializable{
     private String mTime;
     private String mIconUrl;
     private String mTempF;

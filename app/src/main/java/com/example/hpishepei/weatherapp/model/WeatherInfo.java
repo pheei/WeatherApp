@@ -2,10 +2,12 @@ package com.example.hpishepei.weatherapp.model;
 
 import android.content.Context;
 
+import java.io.Serializable;
+
 /**
  * Created by hpishepei on 10/14/15.
  */
-public class WeatherInfo {
+public class WeatherInfo implements Serializable{
 
     private static WeatherInfo ourInstance;
     private Context mContext;
@@ -28,13 +30,7 @@ public class WeatherInfo {
     private String mCurrentPreDayIn;
     private String mCurrentPreDayMetric;
     private String mCurrentUpdateTime;
-
-
-
-
-
-
-
+    public static boolean sIsNull = true;
 
 
 
@@ -46,11 +42,16 @@ public class WeatherInfo {
 
     }
 
+    public static void setInstance(WeatherInfo weatherInfo){
+        ourInstance = weatherInfo;
+        sIsNull = false;
+    }
+
     public static WeatherInfo getInstance(Context c)
     {
         if (ourInstance == null){
             ourInstance = new WeatherInfo(c.getApplicationContext());
-
+            sIsNull = false;
         }
         return ourInstance;
     }

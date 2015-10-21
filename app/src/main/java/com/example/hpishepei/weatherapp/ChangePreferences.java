@@ -24,4 +24,5 @@ public class ChangePreferences {
         editor.putString(Constants.NOTATION_SETTING, notation);
         editor.commit();
     }
+
 }

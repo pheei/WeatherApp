@@ -12,7 +12,9 @@
     <string name="add_label">Add</string>
     <string name="location_update_cancel_label">Location update is cancelled.</string>
     <string name="weatherinfo_update_cancel_label">Fetching weather information is cancelled.</string>
-    <string name="fail_label">Unable to get location!</string>
+    <string name="location_fail_label">Unable to get location!</string>
+    <string name="weather_fail_label">Unable to get weather information!</string>
+
     <string name="my_locations_label">My Locations</string>
     <string name="fetch_location_label">Fetching current location...</string>
     <string name="fetch_weatherinfo_label">Fetching weather information...</string>

@@ -8,6 +8,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -74,7 +75,7 @@ public class LocationFinder implements LocationListener {
         }
     }
 
-    /**
+
     private void startTimer(){
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -87,7 +88,7 @@ public class LocationFinder implements LocationListener {
         }, TIMEOUT_IN_MS);
 
     }
-     */
+
 
     private void fallbackOnLastKnownLocation(){
         Location lastKnownLocation = null;

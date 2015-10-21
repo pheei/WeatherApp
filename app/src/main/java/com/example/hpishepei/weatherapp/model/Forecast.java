@@ -1,9 +1,11 @@
 package com.example.hpishepei.weatherapp.model;
 
+import java.io.Serializable;
+
 /**
  * Created by hpishepei on 10/14/15.
  */
-public class Forecast {
+public class Forecast implements Serializable{
     private String mWeekday;
     private String mIconUrl;
     private String mHighestTempC;
