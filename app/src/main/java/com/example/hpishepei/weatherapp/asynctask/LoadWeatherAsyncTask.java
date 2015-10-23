@@ -45,6 +45,7 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
         mWeatherUpdateListener.updateCompleted(mGeo,mCon,mFore,mHourly);
     }
 
+
     @Override
     protected String doInBackground(String... params) {
         String input = params[0];

@@ -3,12 +3,15 @@ package com.example.hpishepei.weatherapp;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Set;
+
 /**
  * Created by hpishepei on 10/8/15.
  */
 public class ChangePreferences {
     private SharedPreferences sharedPreferences;
     private Context mContext;
+    private Set<String> mSet;
 
     public ChangePreferences(Context context){
         mContext = context;
@@ -22,6 +25,16 @@ public class ChangePreferences {
     public void setNotationSetting(String notation){
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(Constants.NOTATION_SETTING, notation);
+        editor.commit();
+    }
+
+    public Set<String> getCitySet(){
+        return sharedPreferences.getStringSet(Constants.City_SETTING, null);
+    }
+
+    public void setCitySet(Set<String> citySet){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putStringSet(Constants.City_SETTING, citySet);
         editor.commit();
     }
 

@@ -52,8 +52,10 @@ public class LocationFinder implements LocationListener {
 
 
             if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED || Build.VERSION.SDK_INT < 23) {
+                startTimer();
+
                 mLocationManager.requestSingleUpdate(LocationManager.NETWORK_PROVIDER, this, null);
-                //startTimer();
+
             }
             else {
                 endLocationDetection();
@@ -95,12 +97,17 @@ public class LocationFinder implements LocationListener {
 
         if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED || Build.VERSION.SDK_INT < 23) {
             lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            //endLocationDetection();
         }
 
         if(lastKnownLocation != null){
+            //endLocationDetection();
+            mIsDetectingLocation = false;
             mLocationDetector.locationFound(lastKnownLocation);
         }
         else{
+            //endLocationDetection();
+            mIsDetectingLocation = false;
             mLocationDetector.locationNotFound(FailureReason.TIMEOUT);
         }
     }
@@ -108,6 +115,7 @@ public class LocationFinder implements LocationListener {
     @Override
     public void onLocationChanged(Location location) {
         mLocationDetector.locationFound(location);
+        mIsDetectingLocation = false;
 
     }
 
