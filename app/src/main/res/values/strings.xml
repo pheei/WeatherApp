@@ -21,11 +21,14 @@
     <string name="fetch_location_label">Fetching current location...</string>
     <string name="fetch_weatherinfo_label">Fetching weather information...</string>
     <string name="fetch_city_label">Looking up city name...</string>
+    <string name="load_data_label">Loading data...</string>
+
 
     <string name="refresh_label">refresh</string>
     <string name="location_founded_label">Location found!</string>
     <string name="description_hint">Click an above weekday for summery!</string>
     <string name="space_holder">- - - - -</string>
+    <string name="location_update">Update Location</string>
 
 
 </resources>

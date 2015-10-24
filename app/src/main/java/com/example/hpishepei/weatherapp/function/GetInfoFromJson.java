@@ -3,6 +3,7 @@ package com.example.hpishepei.weatherapp.function;
 import android.content.Context;
 import android.util.Log;
 
+import com.example.hpishepei.weatherapp.Constants;
 import com.example.hpishepei.weatherapp.model.Forecast;
 import com.example.hpishepei.weatherapp.model.HourlyForecast;
 import com.example.hpishepei.weatherapp.model.WeatherInfo;
@@ -20,7 +21,7 @@ public class GetInfoFromJson {
 
 
     public static JsonObject getInfoByFeature(String feature, String input, Context context) throws ExecutionException, InterruptedException {
-        String query = "http://api.wunderground.com/api/84d866aae1376b97/";
+        String query = "http://api.wunderground.com/api/"+ Constants.API_KEY + "/";
         query += feature + "/q/" + input + ".json";
         return Ion.with(context).load(query).asJsonObject().get();
     }
@@ -44,7 +45,7 @@ public class GetInfoFromJson {
     }
 
     public static void setCurrentCondition(Context context, JsonObject jsonObject){
-        String[] list = new String[]{"temp_c","temp_f","weather","relative_humidity","wind_string","feelslike_f","feelslike_c","UV","precip_1hr_in","precip_1hr_metric","precip_today_metric","precip_today_in","observation_time"};
+        String[] list = new String[]{"temp_c","temp_f","weather","relative_humidity","wind_degrees","feelslike_f","feelslike_c","UV","precip_1hr_in","precip_1hr_metric","precip_today_metric","precip_today_in","observation_time","wind_kph","wind_mph"};
         ArrayList<String> result = new ArrayList<String>();
         String s = "";
         for (int i = 0 ; i < list.length; i++){
@@ -66,7 +67,7 @@ public class GetInfoFromJson {
         info.setmCurrentHumidity(result.get(3));
         Log.i("lll", "4");
 
-        info.setmCurrentWind(result.get(4));
+        info.setmCurrentWindMph(result.get(4));
         Log.i("lll", "5");
 
         info.setmCurrentFeelsF(result.get(5) + "°");
@@ -74,13 +75,18 @@ public class GetInfoFromJson {
         info.setmCurrentUV(result.get(7));
         Log.i("lll", "6");
 
-        info.setmCurrentPreHrIn(result.get(8) + " inch");
+        info.setmCurrentPreHrIn(result.get(8) + " in");
         info.setmCurrentPreHrMetric(result.get(9) + " mm");
-        info.setmCurrentPreDayMetric(result.get(10)+" mm");
+        info.setmCurrentPreDayMetric(result.get(10) + " mm");
         Log.i("lll", "7");
 
-        info.setmCurrentPreDayIn(result.get(11) + " inch");
+        info.setmCurrentPreDayIn(result.get(11) + " in");
         info.setmCurrentUpdateTime(result.get(12));
+
+        info.setmCurrentWindKph(result.get(13) + " kph");
+        info.setmCurrentWindMph(result.get(14) + " mph");
+
+
         Log.i("lll","herehherherh");
     }
 

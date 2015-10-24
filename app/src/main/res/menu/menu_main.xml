@@ -13,4 +13,9 @@
         android:icon="@drawable/refresh_icon"
         app:showAsAction="ifRoom"
         android:title="@string/refresh_label" />
+
+    <item android:id="@+id/update_location_button"
+        android:icon="@drawable/location_icon"
+        app:showAsAction="ifRoom"
+        android:title="@string/location_update" />
 </menu>

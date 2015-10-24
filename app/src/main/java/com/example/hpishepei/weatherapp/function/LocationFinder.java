@@ -67,6 +67,11 @@ public class LocationFinder implements LocationListener {
         }
     }
 
+    public void cancel(){
+        endLocationDetection();
+        mLocationDetector.locationNotFound(FailureReason.NO_PERMISSION);
+    }
+
     private void endLocationDetection(){
         if(mIsDetectingLocation) {
             mIsDetectingLocation = false;

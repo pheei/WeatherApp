@@ -45,6 +45,10 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
         mWeatherUpdateListener.updateCompleted(mGeo,mCon,mFore,mHourly);
     }
 
+    public void cancel(){
+        mWeatherUpdateListener.updateFail();
+        this.cancel(false);
+    }
 
     @Override
     protected String doInBackground(String... params) {

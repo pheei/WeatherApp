@@ -44,6 +44,8 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
     private EditText mZipEditText;
     private String mInputZip;
     private Boolean mIsStateChanged;
+    private Boolean mIsNormalMode;
+    private String mCityPicked;
     public static final String EXTRA_STATE_CHANGE = "com.example.hpishepei.weatherapp.settingactivity.result";
     public static final String CITY_TAG = "com.example.hpishepei.weatherapp.settingactivity.cityname";
 
@@ -79,6 +81,9 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
         setContentView(R.layout.activity_setting_page);
         Log.i("lll", "set content");
 
+
+        mCityPicked = "";
+
         getList();
         Log.i("lll", Integer.toString(mCityList.size()));
 
@@ -103,7 +108,6 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
     }
 
     private void saveList(){
-        //mCitySet.addAll(mCityList);
         ChangePreferences changePreferences = new ChangePreferences(this);
         Set<String> set = new HashSet<String>(mCityList);
         changePreferences.setCitySet(set);
@@ -111,14 +115,11 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
 
 
     public void updateView(){
-        //mLocationList = LocationList.getInstance(this).getmLocationList();
 
         preferences = new ChangePreferences(this);
 
         WeatherPageActivity.NotationFlag = preferences.getNotationSetting();
 
-        //String locations = sharedpreferences.getString(Constants.LOCATION_SETTING,"");
-        //mLocationList = LocationList.getInstance(this).getmLocationList();
 
         mNotationSwitch = (Switch)findViewById(R.id.notation_switch);
         if (WeatherPageActivity.NotationFlag.equals("F")){
@@ -149,17 +150,16 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
 
         mListView = (ListView)findViewById(R.id.setting_list_container);
 
-        //SettingListAdapter adapter = new SettingListAdapter(mLocationList);
         SettingListAdapter adapter = new SettingListAdapter(mCityList);
 
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String city = (String)parent.getItemAtPosition(position);
-                Intent i = new Intent(SettingActivity.this, WeatherPageActivity.class);
-                i.putExtra(CITY_TAG,city);
-                startActivity(i);
+                mCityPicked = (String)parent.getItemAtPosition(position);
+                Log.i("aaa",mCityPicked);
+                setStateChangeResult(true);
+                finish();
             }
         });
 
@@ -186,43 +186,17 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-                /**
+
                 CityLookup task = new CityLookup(SettingActivity.this,SettingActivity.this);
                 task.execute(mInputZip);
                 mProgressDialog = new ProgressDialog(SettingActivity.this);
                 mProgressDialog.setIndeterminate(true);
                 mProgressDialog.setMessage(SettingActivity.this.getString(R.string.fetch_city_label));
                 mProgressDialog.show();
-                 */
-
-
-                /**
-                mGeoJson =
-
-                mCityList.add(mInputZip);
-                Log.i("lll", "add");
-
-                saveList();
-                Log.i("lll", "save");
-
-                getList();
-                Log.i("lll", "get");
-
-                updateView();
-                 */
+                
             }
         });
 
-        /**
-        mAddButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoadWeatherAsyncTask task = new LoadWeatherAsyncTask(SettingActivity.this,SettingActivity.this);
-                task.execute("geolookup",mInputZip);
-            }
-        });
-         */
     }
 
 
@@ -265,9 +239,11 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
     private void setStateChangeResult(boolean isStateChanged){
         Intent i = new Intent();
         i.putExtra(EXTRA_STATE_CHANGE,isStateChanged);
-        setResult(RESULT_OK,i);
+        i.putExtra(CITY_TAG,mCityPicked);
+        setResult(RESULT_OK, i);
 
     }
+
 
     @Override
     public void lookupCompleted(JsonObject jsonObject) {

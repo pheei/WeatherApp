@@ -21,7 +21,8 @@ public class WeatherInfo implements Serializable{
     private String mCurrentTempF;
     private String mCurrentCondition;
     private String mCurrentHumidity;
-    private String mCurrentWind;
+    private String mCurrentWindMph;
+    private String mCurrentWindKph;
     private String mCurrentFeelsC;
     private String mCurrentFeelsF;
     private String mCurrentUV;
@@ -51,7 +52,7 @@ public class WeatherInfo implements Serializable{
     {
         if (ourInstance == null){
             ourInstance = new WeatherInfo(c.getApplicationContext());
-            sIsNull = false;
+            //sIsNull = false;
         }
         return ourInstance;
     }
@@ -61,6 +62,7 @@ public class WeatherInfo implements Serializable{
     }
 
     public void setmCity(String mCity) {
+        sIsNull = false;
         this.mCity = mCity;
     }
 
@@ -160,12 +162,20 @@ public class WeatherInfo implements Serializable{
         this.mCurrentUV = mCurrentUV;
     }
 
-    public String getmCurrentWind() {
-        return mCurrentWind;
+    public String getmCurrentWindMph() {
+        return mCurrentWindMph;
     }
 
-    public void setmCurrentWind(String mCurrentWind) {
-        this.mCurrentWind = mCurrentWind;
+    public void setmCurrentWindMph(String mCurrentWindMph) {
+        this.mCurrentWindMph = mCurrentWindMph;
+    }
+
+    public String getmCurrentWindKph() {
+        return mCurrentWindKph;
+    }
+
+    public void setmCurrentWindKph(String mCurrentWindKph) {
+        this.mCurrentWindKph = mCurrentWindKph;
     }
 
     public String getmCurrentUpdateTime() {

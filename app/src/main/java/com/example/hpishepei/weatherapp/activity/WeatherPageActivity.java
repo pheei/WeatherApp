@@ -29,6 +29,7 @@ import com.example.hpishepei.weatherapp.model.WeatherInfo;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class WeatherPageActivity extends AppCompatActivity implements LocationFinder.LocationDetector,LoadWeatherAsyncTask.WeatherUpdateListener,CityLookup.CityLookupListener{
 
@@ -41,6 +42,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     public String mLocation;
     private String mCityName;
     private boolean mNormalMode;
+    private String mCityPicked;
 
     private JsonObject mJsonObject;
     private JsonObject mGeoJson;
@@ -77,35 +79,27 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     protected void onResume() {
 
         super.onResume();
-        if (mNormalMode){
-            if (!WeatherInfo.sIsNull){
-                mWeatherInfor = WeatherInfo.getInstance(this);
-                updateView();
-            }
-            else {
-                newUpdate();
-            }
+
+        if (!WeatherInfo.sIsNull){
+            mWeatherInfor = WeatherInfo.getInstance(this);
+            updateView();
         }
         else {
-            Log.i("kkk","good mode");
-            CityLookup cityLookup = new CityLookup(this,this);
-            mPrograssDialog = new ProgressDialog(this);
-            mPrograssDialog.setIndeterminate(true);
-            mPrograssDialog.setMessage(this.getString(R.string.fetch_city_label));
-            mPrograssDialog.show();
-            cityLookup.execute(mCityName);
+            newUpdate();
         }
-
 
 
     }
 
+    private String locationFormat(String location){
+        int index = location.indexOf(",");
+        return (location.substring(index+2,location.length())+"/"+location.substring(0,index));
+    }
 
     @Override
     public void lookupCompleted(JsonObject jsonObject) {
         mPrograssDialog.dismiss();
         JsonObject geoJson = jsonObject;
-        Log.i("kkk","good mode2");
 
         if (geoJson.getAsJsonObject("location")==null){
             Toast.makeText(this,this.getString(R.string.zip_fail_label),Toast.LENGTH_SHORT).show();
@@ -128,26 +122,16 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather_page);
-        Log.i("kkk", "backhere");
-
-        if (getIntent().getStringExtra(SettingActivity.CITY_TAG)!=null){
-            mNormalMode = false;
-            mCityName = getIntent().getStringExtra(SettingActivity.CITY_TAG);
-            Log.i("kkk",mCityName);
-
-
-
-
-        }
-        else {
-            mNormalMode = true;
-        }
-
+        mCityPicked = "";
+        mLocation = "";
     }
 
-    private void cityUpdate(){
-        mHasInfo = false;
+    private void currentCityUpdate(){
+
         mWeatherInfor = WeatherInfo.getInstance(this);
+        mHasInfo = true;
+        mLocation = locationFormat(mWeatherInfor.getmCity());
+
         getWeatherInfo();
     }
 
@@ -162,6 +146,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
             public void onCancel(DialogInterface dialog) {
                 mPrograssDialog.dismiss();
                 Toast.makeText(WeatherPageActivity.this, WeatherPageActivity.this.getString(R.string.location_update_cancel_label), Toast.LENGTH_SHORT).show();
+                mLocationFinder.cancel();
             }
         });
         mPrograssDialog.show();
@@ -188,16 +173,24 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         if (id == R.id.action_settings) {
             Intent i = new Intent(WeatherPageActivity.this, SettingActivity.class);
             startActivityForResult(i,0);
-
-            //startActivity(i);
             return true;
         }
         else if (id == R.id.refresh_button){
-            newUpdate();
-            //LocationFinder locationFinder = new LocationFinder(this,this);
-            //locationFinder.detectLocation();
+            if (WeatherInfo.sIsNull){
+
+                newUpdate();
+            }
+            else {
+                Log.i("aaa","222");
+
+                currentCityUpdate();
+            }
+
             return true;
 
+        }
+        else if (id == R.id.update_location_button){
+            newUpdate();
         }
 
         return super.onOptionsItemSelected(item);
@@ -207,9 +200,102 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
 
 
+
+
+    public void getWeatherInfo(){
+        mLoadWeatherAsyncTask = new LoadWeatherAsyncTask(this,this);
+
+        mPrograssDialog = new ProgressDialog(this);
+        mPrograssDialog.setIndeterminate(true);
+        mPrograssDialog.setMessage(this.getString(R.string.fetch_weatherinfo_label));
+        mPrograssDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                mPrograssDialog.dismiss();
+                Toast.makeText(WeatherPageActivity.this, WeatherPageActivity.this.getString(R.string.weatherinfo_update_cancel_label), Toast.LENGTH_SHORT).show();
+                mLoadWeatherAsyncTask.cancel(true);
+            }
+        });
+        mPrograssDialog.show();
+
+        mLoadWeatherAsyncTask.execute(mLocation);
+    }
+
+    @Override
+    public void locationFound(Location location) {
+        mPrograssDialog.dismiss();
+        sLongitude = location.getLongitude();
+        sLatitude = location.getLatitude();
+        mLocation = Double.toString(sLatitude)+","+Double.toString(sLongitude);
+
+
+
+        getWeatherInfo();
+    }
+
+    @Override
+    public void locationNotFound(LocationFinder.FailureReason failureReason) {
+        mPrograssDialog.dismiss();
+        Toast.makeText(this,this.getString(R.string.location_fail_label),Toast.LENGTH_SHORT).show();
+
+
+    }
+
+
+    @Override
+    public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson, JsonObject hourlyJson) {
+
+        mWeatherInfor.setmCity(GetInfoFromJson.getCityNameFromJSON(geoJson));
+        mWeatherInfor.setmZip(GetInfoFromJson.getZipFromJSON(geoJson));
+        GetInfoFromJson.setCurrentCondition(this, conditionJson);
+        GetInfoFromJson.setForecast(this, forecastJson);
+        GetInfoFromJson.setHourlyForecast(this, hourlyJson);
+
+        mHasInfo = true;
+        mWeatherInfor = WeatherInfo.getInstance(this);
+
+        ChangePreferences preferences = new ChangePreferences(this);
+        Set<String> set = preferences.getCitySet();
+
+        set.add(mWeatherInfor.getmCity());
+        preferences.setCitySet(set);
+
+        updateView();
+        mPrograssDialog.dismiss();
+
+    }
+
+    @Override
+    public void updateFail() {
+
+        mLoadWeatherAsyncTask.cancel(true);
+        Toast.makeText(this,R.string.weather_fail_label,Toast.LENGTH_SHORT).show();
+        mPrograssDialog.dismiss();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+
+        if (data == null){
+            return;
+        }
+        else if (mHasInfo == true && data.getBooleanExtra(SettingActivity.EXTRA_STATE_CHANGE,false) && data.getStringExtra(SettingActivity.CITY_TAG).equals("")){
+            updateView();
+        }
+        else if ((data.getBooleanExtra(SettingActivity.EXTRA_STATE_CHANGE,false) && !data.getStringExtra(SettingActivity.CITY_TAG).equals(""))){
+            mCityPicked = data.getStringExtra(SettingActivity.CITY_TAG);
+            mLocation = locationFormat(mCityPicked);
+            getWeatherInfo();
+        }
+    }
+
     public void updateView(){
+
+
         preferences = new ChangePreferences(this);
         NotationFlag = preferences.getNotationSetting();
+
 
         //mWeatherInfor = WeatherInfo.getInstance(this);
 
@@ -231,7 +317,12 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         }
 
         mCurrentWind = (TextView)findViewById(R.id.current_wind);
-        mCurrentWind.setText("Wind: " + mWeatherInfor.getmCurrentWind());;
+        if (NotationFlag.equals("C")){
+            mCurrentWind.setText("Wind: " + mWeatherInfor.getmCurrentWindKph());
+        }
+        else if (NotationFlag.equals("F")){
+            mCurrentWind.setText("Wind: " + mWeatherInfor.getmCurrentWindMph());
+        }
 
         mCurrentFeel = (TextView)findViewById(R.id.current_feelslike);
         if (NotationFlag.equals("C")){
@@ -288,7 +379,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         mDescription.setText(this.getString(R.string.description_hint));
 
 
-
     }
 
 
@@ -327,79 +417,5 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
             return convertView;
         }
 
-    }
-
-    public void getWeatherInfo(){
-        mLoadWeatherAsyncTask = new LoadWeatherAsyncTask(this,this);
-
-        mPrograssDialog = new ProgressDialog(this);
-        mPrograssDialog.setIndeterminate(true);
-        mPrograssDialog.setMessage(this.getString(R.string.fetch_weatherinfo_label));
-        mPrograssDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                mPrograssDialog.dismiss();
-                Toast.makeText(WeatherPageActivity.this, WeatherPageActivity.this.getString(R.string.weatherinfo_update_cancel_label), Toast.LENGTH_SHORT).show();
-            }
-        });
-        mPrograssDialog.show();
-
-        mLoadWeatherAsyncTask.execute(mLocation);
-    }
-
-    @Override
-    public void locationFound(Location location) {
-        mPrograssDialog.dismiss();
-        sLongitude = location.getLongitude();
-        sLatitude = location.getLatitude();
-        mLocation = Double.toString(sLatitude)+","+Double.toString(sLongitude);
-        Log.i("lll", Double.toString(sLatitude) + "," + Double.toString(sLongitude));
-
-        getWeatherInfo();
-    }
-
-    @Override
-    public void locationNotFound(LocationFinder.FailureReason failureReason) {
-        mPrograssDialog.dismiss();
-        Toast.makeText(this,this.getString(R.string.location_fail_label),Toast.LENGTH_SHORT).show();
-
-
-    }
-
-
-    @Override
-    public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson, JsonObject hourlyJson) {
-
-        mWeatherInfor.setmCity(GetInfoFromJson.getCityNameFromJSON(geoJson));
-        mWeatherInfor.setmZip(GetInfoFromJson.getZipFromJSON(geoJson));
-        GetInfoFromJson.setCurrentCondition(this, conditionJson);
-        GetInfoFromJson.setForecast(this, forecastJson);
-        GetInfoFromJson.setHourlyForecast(this, hourlyJson);
-
-        Log.i("lll", "done!!!!!!");
-        mHasInfo = true;
-        mWeatherInfor = WeatherInfo.getInstance(this);
-        updateView();
-        mPrograssDialog.dismiss();
-
-    }
-
-    @Override
-    public void updateFail() {
-
-        mLoadWeatherAsyncTask.cancel(true);
-        Log.i("lll","get infor fail");
-        Toast.makeText(this,R.string.weather_fail_label,Toast.LENGTH_SHORT).show();
-        mPrograssDialog.dismiss();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (data == null){
-            return;
-        }
-        if (mHasInfo == true && data.getBooleanExtra(SettingActivity.EXTRA_STATE_CHANGE,false)){
-            updateView();
-        }
     }
 }
