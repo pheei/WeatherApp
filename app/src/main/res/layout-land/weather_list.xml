@@ -1,0 +1,36 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <TextView
+        android:id="@+id/list_weekday"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        />
+    <ImageView
+        android:id="@+id/list_weather"
+        android:layout_marginLeft="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="20dp"
+        android:src="@drawable/partlycloudy"
+        />
+    <TextView
+        android:id="@+id/list_temp"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="200dp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="20dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:gravity="right"/>
+
+</RelativeLayout>

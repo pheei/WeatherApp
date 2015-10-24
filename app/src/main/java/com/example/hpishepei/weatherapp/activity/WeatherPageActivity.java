@@ -76,6 +76,18 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     ChangePreferences preferences;
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (mLoadWeatherAsyncTask!=null){
+            mLoadWeatherAsyncTask.cancel();
+        }
+        if (mLocationFinder!=null){
+            mLocationFinder.cancel();
+        }
+
+    }
+
+    @Override
     protected void onResume() {
 
         super.onResume();
@@ -217,6 +229,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
             }
         });
         mPrograssDialog.show();
+        Log.i("aaa", "1");
 
         mLoadWeatherAsyncTask.execute(mLocation);
     }
@@ -281,11 +294,15 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
             return;
         }
         else if (mHasInfo == true && data.getBooleanExtra(SettingActivity.EXTRA_STATE_CHANGE,false) && data.getStringExtra(SettingActivity.CITY_TAG).equals("")){
+
             updateView();
         }
         else if ((data.getBooleanExtra(SettingActivity.EXTRA_STATE_CHANGE,false) && !data.getStringExtra(SettingActivity.CITY_TAG).equals(""))){
+
             mCityPicked = data.getStringExtra(SettingActivity.CITY_TAG);
             mLocation = locationFormat(mCityPicked);
+            Log.i("aaa",mLocation);
+
             getWeatherInfo();
         }
     }
@@ -296,8 +313,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         preferences = new ChangePreferences(this);
         NotationFlag = preferences.getNotationSetting();
 
-
-        //mWeatherInfor = WeatherInfo.getInstance(this);
 
         mUpdateTimeTextView = (TextView)findViewById(R.id.updated_time_TextView);
         mUpdateTimeTextView.setText(mWeatherInfor.getmCurrentUpdateTime());

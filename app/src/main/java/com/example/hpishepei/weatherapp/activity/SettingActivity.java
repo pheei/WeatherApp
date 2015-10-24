@@ -193,7 +193,7 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
                 mProgressDialog.setIndeterminate(true);
                 mProgressDialog.setMessage(SettingActivity.this.getString(R.string.fetch_city_label));
                 mProgressDialog.show();
-                
+
             }
         });
 

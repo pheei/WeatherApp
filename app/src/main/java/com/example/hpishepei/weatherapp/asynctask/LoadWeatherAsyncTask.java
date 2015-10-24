@@ -1,6 +1,7 @@
 package com.example.hpishepei.weatherapp.asynctask;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Handler;
 
@@ -50,10 +51,21 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
         this.cancel(false);
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
+    }
+
     @Override
     protected String doInBackground(String... params) {
         String input = params[0];
         mIsFetchingInfo = true;
+
+
+        if (!isNetworkConnected()){
+            cancel();
+        }
 
 
         try {
