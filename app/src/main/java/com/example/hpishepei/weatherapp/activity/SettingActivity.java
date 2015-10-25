@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -40,12 +39,16 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
     private ArrayList<Location> mLocationList;
     private ListView mListView;
     private ChangePreferences preferences;
+    private EditText mDays;
+    private Button mUpdate;
 
     private EditText mZipEditText;
     private String mInputZip;
     private Boolean mIsStateChanged;
     private Boolean mIsNormalMode;
     private String mCityPicked;
+    private String mDayNum;
+    private String mInputDays;
     public static final String EXTRA_STATE_CHANGE = "com.example.hpishepei.weatherapp.settingactivity.result";
     public static final String CITY_TAG = "com.example.hpishepei.weatherapp.settingactivity.cityname";
 
@@ -58,8 +61,6 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
 
     @Override
     protected void onResume() {
-        System.out.print("onResume!!!!!!");
-
         super.onResume();
         preferences = new ChangePreferences(this);
         WeatherPageActivity.NotationFlag = preferences.getNotationSetting();
@@ -67,7 +68,6 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
 
     @Override
     protected void onPause() {
-        System.out.print("onPause!!!!!!");
         preferences = new ChangePreferences(this);
         preferences.setNotationSetting(WeatherPageActivity.NotationFlag);
         super.onPause();
@@ -79,15 +79,11 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_page);
-        Log.i("lll", "set content");
 
 
         mCityPicked = "";
 
         getList();
-        Log.i("lll", Integer.toString(mCityList.size()));
-
-
 
         setStateChangeResult(false);
         updateView();
@@ -136,17 +132,61 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
                 if (isChecked){
                     pref.setNotationSetting("F");
                     WeatherPageActivity.NotationFlag = "F";
-                    Log.i("ccc", WeatherPageActivity.NotationFlag);
                 }
                 else {
                     pref.setNotationSetting("C");
                     WeatherPageActivity.NotationFlag = "C";
-                    Log.i("ccc",WeatherPageActivity.NotationFlag);
 
 
                 }
             }
         });
+
+
+        mDays = (EditText)findViewById(R.id.number_of_days_EditText);
+        mDayNum = preferences.getDayNumber();
+        mDays.setText("  "+mDayNum+"  ");
+        mInputDays = mDayNum;
+        mDays.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mInputDays = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        mUpdate = (Button)findViewById(R.id.update_days_button);
+        mUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                mInputDays = mInputDays.replace(" ","");
+
+                if (mInputDays.equals("1") || mInputDays.equals("2")|| mInputDays.equals("3")|| mInputDays.equals("4")){
+                    preferences.setDayNumber(mInputDays);
+                    Toast.makeText(SettingActivity.this,SettingActivity.this.getString(R.string.days_updated_label),Toast.LENGTH_SHORT).show();
+                    updateView();
+                }
+                else {
+
+                    Toast.makeText(SettingActivity.this,SettingActivity.this.getString(R.string.days_number_label),Toast.LENGTH_SHORT).show();
+                    updateView();
+                }
+
+            }
+        });
+
+
 
         mListView = (ListView)findViewById(R.id.setting_list_container);
 
@@ -157,7 +197,6 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 mCityPicked = (String)parent.getItemAtPosition(position);
-                Log.i("aaa",mCityPicked);
                 setStateChangeResult(true);
                 finish();
             }

@@ -12,6 +12,8 @@ public class Constants {
     public static final String AUTOLOCATION_SETTING = "autolocation setting";
     public static final String LOCATION_PREFERENCES = "location list";
     public static final String LOCATION_SETTING = "location setting";
+    public static final String Days_SETTING = "days setting";
+
 
     public static final String API_KEY = "84d866aae1376b97";
 

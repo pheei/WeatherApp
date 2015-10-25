@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Handler;
+import android.util.Log;
 
 import com.example.hpishepei.weatherapp.function.GetInfoFromJson;
 import com.google.gson.JsonObject;
@@ -43,12 +44,12 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        mWeatherUpdateListener.updateCompleted(mGeo,mCon,mFore,mHourly);
+        mWeatherUpdateListener.updateCompleted(mGeo, mCon, mFore, mHourly);
     }
 
     public void cancel(){
+        this.cancel(true);
         mWeatherUpdateListener.updateFail();
-        this.cancel(false);
     }
 
     private boolean isNetworkConnected() {
@@ -62,11 +63,16 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
         String input = params[0];
         mIsFetchingInfo = true;
 
+        Log.i("kkk", String.valueOf(isNetworkConnected()));
 
+
+        /**
         if (!isNetworkConnected()){
             cancel();
         }
+         */
 
+        //startTimer();
 
         try {
             //startTimer();
@@ -93,11 +99,14 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(mIsFetchingInfo){
-                    mWeatherUpdateListener.updateFail();
+                if (mIsFetchingInfo==true){
+                    cancel();
                 }
             }
         }, TIMEOUT_IN_MS);
 
     }
+
+
+
 }

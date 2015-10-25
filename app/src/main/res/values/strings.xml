@@ -15,6 +15,8 @@
     <string name="location_fail_label">Unable to get location!</string>
     <string name="weather_fail_label">Unable to get weather information!</string>
     <string name="zip_fail_label">No city found!</string>
+    <string name="no_network_label">No internet connection!</string>
+
 
 
     <string name="my_locations_label">My Locations</string>
@@ -29,6 +31,20 @@
     <string name="description_hint">Click an above weekday for summery!</string>
     <string name="space_holder">- - - - -</string>
     <string name="location_update">Update Location</string>
+    <string name="days_label">Days to be shown:</string>
+    <string name="update_label">update</string>
+
+    <string name="days_number_label">Please input a number between 1 ~ 4!</string>
+    <string name="days_updated_label">Update completed!</string>
+
+
+    <string name="wind_label">Wind: </string>
+    <string name="feel_label">Feels like: </string>
+    <string name="UV_label">UV index: </string>
+    <string name="humidity_label">Humidity: </string>
+    <string name="rain_hr_label">Rain 1hr: </string>
+    <string name="rain_day_label">Rain today: </string>
+    <string name="brief"> brief: </string>
 
 
 </resources>

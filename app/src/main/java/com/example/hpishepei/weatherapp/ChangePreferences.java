@@ -38,4 +38,13 @@ public class ChangePreferences {
         editor.commit();
     }
 
+    public String getDayNumber(){
+        return sharedPreferences.getString(Constants.Days_SETTING,"4");
+    }
+    public void setDayNumber(String days){
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(Constants.Days_SETTING, days);
+        editor.commit();
+    }
+
 }

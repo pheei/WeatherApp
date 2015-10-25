@@ -1,12 +1,13 @@
 package com.example.hpishepei.weatherapp.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
 
     public static String NotationFlag;
+    public static String mDayNum;
     public static Double sLongitude = 0.0;
     public static Double sLatitude = 0.0;
     private boolean mHasInfo;
@@ -75,17 +77,18 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
     ChangePreferences preferences;
 
+
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         if (mLoadWeatherAsyncTask!=null){
             mLoadWeatherAsyncTask.cancel();
         }
         if (mLocationFinder!=null){
             mLocationFinder.cancel();
         }
-
     }
+
 
     @Override
     protected void onResume() {
@@ -193,8 +196,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
                 newUpdate();
             }
             else {
-                Log.i("aaa","222");
-
                 currentCityUpdate();
             }
 
@@ -209,13 +210,13 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     }
 
 
-
-
-
-
-
     public void getWeatherInfo(){
         mLoadWeatherAsyncTask = new LoadWeatherAsyncTask(this,this);
+        if (!isNetworkConnected()){
+            Toast.makeText(this,this.getString(R.string.no_network_label),Toast.LENGTH_SHORT).show();
+            return;
+        }
+
 
         mPrograssDialog = new ProgressDialog(this);
         mPrograssDialog.setIndeterminate(true);
@@ -229,7 +230,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
             }
         });
         mPrograssDialog.show();
-        Log.i("aaa", "1");
 
         mLoadWeatherAsyncTask.execute(mLocation);
     }
@@ -241,8 +241,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         sLatitude = location.getLatitude();
         mLocation = Double.toString(sLatitude)+","+Double.toString(sLongitude);
 
-
-
         getWeatherInfo();
     }
 
@@ -250,8 +248,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     public void locationNotFound(LocationFinder.FailureReason failureReason) {
         mPrograssDialog.dismiss();
         Toast.makeText(this,this.getString(R.string.location_fail_label),Toast.LENGTH_SHORT).show();
-
-
     }
 
 
@@ -301,7 +297,6 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
             mCityPicked = data.getStringExtra(SettingActivity.CITY_TAG);
             mLocation = locationFormat(mCityPicked);
-            Log.i("aaa",mLocation);
 
             getWeatherInfo();
         }
@@ -312,6 +307,8 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
         preferences = new ChangePreferences(this);
         NotationFlag = preferences.getNotationSetting();
+        mDayNum = preferences.getDayNumber();
+        int days = Integer.parseInt(mDayNum);
 
 
         mUpdateTimeTextView = (TextView)findViewById(R.id.updated_time_TextView);
@@ -333,48 +330,53 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
         mCurrentWind = (TextView)findViewById(R.id.current_wind);
         if (NotationFlag.equals("C")){
-            mCurrentWind.setText("Wind: " + mWeatherInfor.getmCurrentWindKph());
+            mCurrentWind.setText(this.getString(R.string.wind_label) + mWeatherInfor.getmCurrentWindKph());
         }
         else if (NotationFlag.equals("F")){
-            mCurrentWind.setText("Wind: " + mWeatherInfor.getmCurrentWindMph());
+            mCurrentWind.setText(this.getString(R.string.wind_label) + mWeatherInfor.getmCurrentWindMph());
         }
 
         mCurrentFeel = (TextView)findViewById(R.id.current_feelslike);
         if (NotationFlag.equals("C")){
-            mCurrentFeel.setText("Feels like: " + mWeatherInfor.getmCurrentFeelsC());
+            mCurrentFeel.setText(this.getString(R.string.feel_label) + mWeatherInfor.getmCurrentFeelsC());
         }
         else if (NotationFlag.equals("F")){
-            mCurrentFeel.setText("Feels like: " + mWeatherInfor.getmCurrentFeelsF());
+            mCurrentFeel.setText(this.getString(R.string.feel_label) + mWeatherInfor.getmCurrentFeelsF());
         }
 
         mCurrentUV = (TextView)findViewById(R.id.current_solar);
-        mCurrentUV.setText("UV index: " + mWeatherInfor.getmCurrentUV());
+        mCurrentUV.setText(this.getString(R.string.UV_label) + mWeatherInfor.getmCurrentUV());
 
         mCurrentHumidity = (TextView)findViewById(R.id.current_humidity);
-        mCurrentHumidity.setText("Humidity: " + mWeatherInfor.getmCurrentHumidity());
+        mCurrentHumidity.setText(this.getString(R.string.humidity_label) + mWeatherInfor.getmCurrentHumidity());
 
         mCurrentPreHr = (TextView)findViewById(R.id.current_1hr_rain);
         if (NotationFlag.equals("C")){
-            mCurrentPreHr.setText("Rain 1hr: " + mWeatherInfor.getmCurrentPreHrMetric());
+            mCurrentPreHr.setText(this.getString(R.string.rain_hr_label) + mWeatherInfor.getmCurrentPreHrMetric());
         }
         else if (NotationFlag.equals("F")){
-            mCurrentPreHr.setText("Rain 1hr: " + mWeatherInfor.getmCurrentPreHrIn());
+            mCurrentPreHr.setText(this.getString(R.string.rain_hr_label) + mWeatherInfor.getmCurrentPreHrIn());
         }
 
         mCurrentPreDay = (TextView)findViewById(R.id.current_day_rain);
         if (NotationFlag.equals("C")){
-            mCurrentPreDay.setText("Rain today: " + mWeatherInfor.getmCurrentPreDayMetric());
+            mCurrentPreDay.setText(this.getString(R.string.rain_day_label) + mWeatherInfor.getmCurrentPreDayMetric());
         }
         else if (NotationFlag.equals("F")){
-            mCurrentPreDay.setText("Rain today: " + mWeatherInfor.getmCurrentPreDayIn());
+            mCurrentPreDay.setText(this.getString(R.string.rain_day_label) + mWeatherInfor.getmCurrentPreDayIn());
         }
 
 
         mListView = (ListView)findViewById(R.id.list_container);
         ArrayList<Forecast> forecasts = new ArrayList<Forecast>();
+        for (int i = 0; i < days; i++){
+            forecasts.add(mWeatherInfor.getmForecastList()[i]);
+        }
+        /**
         for (Forecast i : mWeatherInfor.getmForecastList()){
             forecasts.add(i);
         }
+         */
         WeatherListAdapter adapter = new WeatherListAdapter(forecasts);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -384,9 +386,9 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
                 forecast = (Forecast) parent.getItemAtPosition(position);
                 mDescription = (TextView) findViewById(R.id.description_TextView);
                 if (NotationFlag.equals("C")) {
-                    mDescription.setText(forecast.getmWeekday() + " brief: " + forecast.getmDescriptionC());
+                    mDescription.setText(forecast.getmWeekday() + WeatherPageActivity.this.getString(R.string.brief) + forecast.getmDescriptionC());
                 } else if (NotationFlag.equals("F")) {
-                    mDescription.setText(forecast.getmWeekday() + " brief: " + forecast.getmDescriptionF());
+                    mDescription.setText(forecast.getmWeekday() + WeatherPageActivity.this.getString(R.string.brief) + forecast.getmDescriptionF());
                 }
             }
         });
@@ -432,5 +434,11 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
             return convertView;
         }
 
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null;
     }
 }

@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">天气预报</string>
+
+    <string name="hello_world">你好</string>
+    <string name="action_settings">设置</string>
+    <string name="title_activity_weather_page">天气</string>
+    <string name="title_activity_setting">设置</string>
+    <string name="units_label">单位</string>
+    <string name="fahrenheit_label">\u00B0F</string>
+    <string name="celsius_label">\u00B0C</string>
+    <string name="search_hint">输入邮编</string>
+    <string name="add_label">添加</string>
+    <string name="location_update_cancel_label">位置更新已取消.</string>
+    <string name="weatherinfo_update_cancel_label">获取天气信息已取消</string>
+    <string name="location_fail_label">无法获得位置信息</string>
+    <string name="weather_fail_label">无法获得天气信息</string>
+    <string name="zip_fail_label">找不到此城市</string>
+    <string name="no_network_label">无网络连接!</string>
+
+
+
+    <string name="my_locations_label">我的城市</string>
+    <string name="fetch_location_label">获取位置信息中...</string>
+    <string name="fetch_weatherinfo_label">获取天气信息中...</string>
+    <string name="fetch_city_label">查询城市中...</string>
+    <string name="load_data_label">载入数据中...</string>
+
+
+    <string name="refresh_label">更新</string>
+    <string name="location_founded_label">查询成功!</string>
+    <string name="description_hint">点击以上日子获取详细信息!</string>
+    <string name="space_holder">- - - - -</string>
+    <string name="location_update">更新位置</string>
+    <string name="days_label">选择显示几天:</string>
+    <string name="update_label">更新</string>
+
+    <string name="days_number_label">请输入1 ~ 4之间的数!</string>
+    <string name="days_updated_label">更新完成!</string>
+
+
+    <string name="wind_label">风力: </string>
+    <string name="feel_label">体感温度: </string>
+    <string name="UV_label">紫外线强度: </string>
+    <string name="humidity_label">湿度: </string>
+    <string name="rain_hr_label">1小时降雨: </string>
+    <string name="rain_day_label">今日降雨: </string>
+    <string name="brief"> 简要: </string>
+
+
+</resources>
