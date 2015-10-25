@@ -42,8 +42,8 @@
     <string name="feel_label">体感温度: </string>
     <string name="UV_label">紫外线强度: </string>
     <string name="humidity_label">湿度: </string>
-    <string name="rain_hr_label">1小时降雨: </string>
-    <string name="rain_day_label">今日降雨: </string>
+    <string name="rain_hr_label">小时雨量: </string>
+    <string name="rain_day_label">今日雨量: </string>
     <string name="brief"> 简要: </string>
 
 
