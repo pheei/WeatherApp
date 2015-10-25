@@ -63,13 +63,6 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
         mIsFetchingInfo = true;
 
 
-        /**
-        if (!isNetworkConnected()){
-            cancel();
-        }
-         */
-
-        //startTimer();
 
         try {
             //startTimer();

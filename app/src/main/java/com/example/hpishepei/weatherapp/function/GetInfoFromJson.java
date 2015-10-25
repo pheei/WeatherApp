@@ -103,8 +103,7 @@ public class GetInfoFromJson {
     public static void setForecast(Context context, JsonObject jsonObject){
         WeatherInfo info = WeatherInfo.getInstance(context);
         Forecast[] list = info.getmForecastList();
-        //list[0] = new Forecast();
-        //list[0].setmWeekday("Thursday");
+
 
         String s = "";
         for (int i = 0; i<list.length; i++){
@@ -152,87 +151,4 @@ public class GetInfoFromJson {
 
     }
 
-    /**
-    public static String getCurrentTempC(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("temp_c").toString();
-        result = result.replace("\"","");
-        result += "°";
-        return result;
-    }
-
-    public static String getCurrentTempF(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("temp_f").toString();
-        result = result.replace("\"","");
-        result += "°";
-        return result;
-    }
-
-    public static String getCurrentCondition(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("weather").toString();
-        result = result.replace("\"","");
-        return result;
-    }
-
-    public static String getCurrentHumidity(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("relative_humidity").toString();
-        result = result.replace("\"","");
-        return result;
-    }
-
-    public static String getCurrentWind(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("wind_string").toString();
-        result = result.replace("\"","");
-        return result;
-    }
-
-    public static String getCurrentFeelsF(JsonObject jsonObject){
-        String feel = jsonObject.getAsJsonObject("current_observation").get("feelslike_f").toString();
-        feel = feel.replace("\"","");
-        feel += "°";
-        return feel;
-    }
-
-    public static String getCurrentFeelsC(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("feelslike_c").toString();
-        result = result.replace("\"","");
-        result += "°";
-        return result;
-    }
-
-
-    public static String getCurrentUV(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("UV").toString();
-        result = result.replace("\"","");
-        return result;
-    }
-
-    public static String getCurrentPreHrIn(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("precip_1hr_in").toString();
-        result = result.replace("\"","");
-        result += " inch";
-        return result;
-    }
-
-    public static String getCurrentPreHrMetric(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("precip_1hr_metric").toString();
-        result = result.replace("\"","");
-        result += " mm";
-        return result;
-    }
-
-    public static String getCurrentPreDayMetric(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("precip_today_metric").toString();
-        result = result.replace("\"","");
-        result += " mm";
-        return result;
-    }
-
-    public static String getCurrentPreDayIn(JsonObject jsonObject){
-        String result = jsonObject.getAsJsonObject("current_observation").get("precip_today_in").toString();
-        result = result.replace("\"","");
-        result += " inch";
-        return result;
-    }
-
-     */
 }

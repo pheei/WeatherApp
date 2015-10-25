@@ -102,35 +102,8 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         else {
             newUpdate();
         }
-
-
     }
 
-    private String locationFormat(String location){
-        int index = location.indexOf(",");
-        return (location.substring(index+2,location.length())+"/"+location.substring(0,index));
-    }
-
-    @Override
-    public void lookupCompleted(JsonObject jsonObject) {
-        mPrograssDialog.dismiss();
-        JsonObject geoJson = jsonObject;
-
-        if (geoJson.getAsJsonObject("location")==null){
-            Toast.makeText(this,this.getString(R.string.zip_fail_label),Toast.LENGTH_SHORT).show();
-        }
-        else {
-
-            mLocation = GetInfoFromJson.getZipFromJSON(geoJson);
-            getWeatherInfo();
-        }
-
-    }
-
-    @Override
-    public void lookupFail() {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,14 +171,11 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
             else {
                 currentCityUpdate();
             }
-
             return true;
-
         }
         else if (id == R.id.update_location_button){
             newUpdate();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -441,5 +411,31 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         return cm.getActiveNetworkInfo() != null;
+    }
+
+    private String locationFormat(String location){
+        int index = location.indexOf(",");
+        return (location.substring(index+2,location.length())+"/"+location.substring(0,index));
+    }
+
+    @Override
+    public void lookupCompleted(JsonObject jsonObject) {
+        mPrograssDialog.dismiss();
+        JsonObject geoJson = jsonObject;
+
+        if (geoJson.getAsJsonObject("location")==null){
+            Toast.makeText(this,this.getString(R.string.zip_fail_label),Toast.LENGTH_SHORT).show();
+        }
+        else {
+
+            mLocation = GetInfoFromJson.getZipFromJSON(geoJson);
+            getWeatherInfo();
+        }
+
+    }
+
+    @Override
+    public void lookupFail() {
+
     }
 }

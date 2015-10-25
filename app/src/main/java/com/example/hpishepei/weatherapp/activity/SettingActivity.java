@@ -80,15 +80,12 @@ public class SettingActivity extends AppCompatActivity implements CityLookup.Cit
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_page);
 
-
         mCityPicked = "";
 
         getList();
 
         setStateChangeResult(false);
         updateView();
-
-
     }
 
     private void getList(){
