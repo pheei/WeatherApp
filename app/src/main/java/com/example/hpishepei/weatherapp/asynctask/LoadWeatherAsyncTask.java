@@ -4,7 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.os.Handler;
-import android.util.Log;
 
 import com.example.hpishepei.weatherapp.function.GetInfoFromJson;
 import com.google.gson.JsonObject;
@@ -62,8 +61,6 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
     protected String doInBackground(String... params) {
         String input = params[0];
         mIsFetchingInfo = true;
-
-        Log.i("kkk", String.valueOf(isNetworkConnected()));
 
 
         /**

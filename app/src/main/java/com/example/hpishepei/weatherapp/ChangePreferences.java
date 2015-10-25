@@ -3,6 +3,7 @@ package com.example.hpishepei.weatherapp;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -29,7 +30,7 @@ public class ChangePreferences {
     }
 
     public Set<String> getCitySet(){
-        return sharedPreferences.getStringSet(Constants.City_SETTING, null);
+        return sharedPreferences.getStringSet(Constants.City_SETTING, new HashSet<String>());
     }
 
     public void setCitySet(Set<String> citySet){

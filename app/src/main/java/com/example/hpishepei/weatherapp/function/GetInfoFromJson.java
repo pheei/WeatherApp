@@ -1,7 +1,6 @@
 package com.example.hpishepei.weatherapp.function;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.example.hpishepei.weatherapp.Constants;
 import com.example.hpishepei.weatherapp.model.Forecast;
@@ -29,8 +28,6 @@ public class GetInfoFromJson {
     public static String getCityNameFromJSON(JsonObject jsonObject){
         String state = jsonObject.getAsJsonObject("location").get("state").toString();
         String city = jsonObject.getAsJsonObject("location").get("city").toString();
-        Log.i("lll",state);
-        Log.i("lll",city);
         String result = city + ", " + state;
         result = result.replace("\"","");
         return result;
@@ -50,35 +47,27 @@ public class GetInfoFromJson {
         String s = "";
         for (int i = 0 ; i < list.length; i++){
             s = jsonObject.getAsJsonObject("current_observation").get(list[i]).toString();
-            Log.i("lll",list[i]+","+s);
             result.add(s.replace("\"", ""));
         }
 
         WeatherInfo info = WeatherInfo.getInstance(context);
         info.setmCurrentTempC(result.get(0)+"°");
-        Log.i("lll", "1");
 
         info.setmCurrentTempF(result.get(1) + "°");
-        Log.i("lll", "2");
 
         info.setmCurrentCondition(result.get(2));
-        Log.i("lll", "3");
 
         info.setmCurrentHumidity(result.get(3));
-        Log.i("lll", "4");
 
         info.setmCurrentWindMph(result.get(4));
-        Log.i("lll", "5");
 
         info.setmCurrentFeelsF(result.get(5) + "°");
         info.setmCurrentFeelsC(result.get(6) + "°");
         info.setmCurrentUV(result.get(7));
-        Log.i("lll", "6");
 
         info.setmCurrentPreHrIn(result.get(8) + " in");
         info.setmCurrentPreHrMetric(result.get(9) + " mm");
         info.setmCurrentPreDayMetric(result.get(10) + " mm");
-        Log.i("lll", "7");
 
         info.setmCurrentPreDayIn(result.get(11) + " in");
         info.setmCurrentUpdateTime(result.get(12));
@@ -87,7 +76,6 @@ public class GetInfoFromJson {
         info.setmCurrentWindMph(result.get(14) + " mph");
 
 
-        Log.i("lll","herehherherh");
     }
 
 
@@ -115,7 +103,6 @@ public class GetInfoFromJson {
     public static void setForecast(Context context, JsonObject jsonObject){
         WeatherInfo info = WeatherInfo.getInstance(context);
         Forecast[] list = info.getmForecastList();
-        Log.i("lll",Integer.toString(list.length));
         //list[0] = new Forecast();
         //list[0].setmWeekday("Thursday");
 
