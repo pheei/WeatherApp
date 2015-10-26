@@ -8,6 +8,7 @@ import android.location.Location;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.example.hpishepei.weatherapp.function.LocationFinder;
 import com.example.hpishepei.weatherapp.model.Forecast;
 import com.example.hpishepei.weatherapp.model.WeatherInfo;
 import com.google.gson.JsonObject;
+import com.koushikdutta.ion.Ion;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -210,6 +212,8 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         sLongitude = location.getLongitude();
         sLatitude = location.getLatitude();
         mLocation = Double.toString(sLatitude)+","+Double.toString(sLongitude);
+
+        Log.i("lll",mLocation);
 
         getWeatherInfo();
     }
@@ -415,7 +419,8 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
 
             ImageView listWeather = (ImageView)convertView.findViewById(R.id.list_weather);
-            listWeather.setImageResource(R.drawable.partlycloudy);
+            //Ion.with(listWeather).load(forecast.getmIconUrl());
+            Ion.with(listWeather).load(forecast.getmIconUrl().toString());
 
             TextView listTemp = (TextView)convertView.findViewById(R.id.list_temp);
             if (NotationFlag.equals("C")){
