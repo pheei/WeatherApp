@@ -44,7 +44,7 @@
     <string name="humidity_label">Humidity: </string>
     <string name="rain_hr_label">Rain 1hr: </string>
     <string name="rain_day_label">Rain today: </string>
-    <string name="brief"> brief: </string>
+    <string name="brief">brief: </string>
 
 
 </resources>

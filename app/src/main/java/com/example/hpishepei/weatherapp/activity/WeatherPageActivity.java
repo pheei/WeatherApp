@@ -381,9 +381,9 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
                 forecast = (Forecast) parent.getItemAtPosition(position);
                 mDescription = (TextView) findViewById(R.id.description_TextView);
                 if (NotationFlag.equals("C")) {
-                    mDescription.setText(forecast.getmWeekday() + WeatherPageActivity.this.getString(R.string.brief) + forecast.getmDescriptionC());
+                    mDescription.setText(forecast.getmWeekday() + " " + WeatherPageActivity.this.getString(R.string.brief) + forecast.getmDescriptionC());
                 } else if (NotationFlag.equals("F")) {
-                    mDescription.setText(forecast.getmWeekday() + WeatherPageActivity.this.getString(R.string.brief) + forecast.getmDescriptionF());
+                    mDescription.setText(forecast.getmWeekday() + " " +  WeatherPageActivity.this.getString(R.string.brief) + forecast.getmDescriptionF());
                 }
             }
         });
