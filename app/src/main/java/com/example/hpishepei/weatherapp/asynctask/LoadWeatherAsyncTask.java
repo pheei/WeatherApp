@@ -20,7 +20,7 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
     private JsonObject mGeo;
     private JsonObject mCon;
     private JsonObject mFore;
-    private JsonObject mHourly;
+    //private JsonObject mHourly;
     private WeatherUpdateListener mWeatherUpdateListener;
     private String mFlag;
     private boolean mIsFetchingInfo = false;
@@ -35,7 +35,9 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
     }
 
     public interface WeatherUpdateListener{
-        public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson, JsonObject hourlyJson);
+        public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson);
+        //public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson, JsonObject hourlyJson);
+
         public void updateFail();
     }
 
@@ -43,7 +45,8 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        mWeatherUpdateListener.updateCompleted(mGeo, mCon, mFore, mHourly);
+        mWeatherUpdateListener.updateCompleted(mGeo, mCon, mFore);
+        //mWeatherUpdateListener.updateCompleted(mGeo, mCon, mFore, mHourly);
     }
 
     public void cancel(){
@@ -69,7 +72,7 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
             mGeo = GetInfoFromJson.getInfoByFeature("geolookup", input, mContext);
             mCon = GetInfoFromJson.getInfoByFeature("conditions", input, mContext);
             mFore = GetInfoFromJson.getInfoByFeature("forecast", input, mContext);
-            mHourly = GetInfoFromJson.getInfoByFeature("hourly", input, mContext);
+            //mHourly = GetInfoFromJson.getInfoByFeature("hourly", input, mContext);
 
 
         } catch (ExecutionException e) {

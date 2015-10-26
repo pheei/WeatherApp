@@ -221,6 +221,8 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     }
 
 
+    //the hourly forecast would be implemented later once I have time, and would not be included in the homework submission.
+    /**
     @Override
     public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson, JsonObject hourlyJson) {
         mWeatherInfor = WeatherInfo.getInstance(this);
@@ -240,6 +242,28 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         preferences.setCitySet(set);
 
 
+
+        updateView();
+        mPrograssDialog.dismiss();
+
+    }
+     */
+
+    public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson) {
+        mWeatherInfor = WeatherInfo.getInstance(this);
+
+        mWeatherInfor.setmCity(GetInfoFromJson.getCityNameFromJSON(geoJson));
+        mWeatherInfor.setmZip(GetInfoFromJson.getZipFromJSON(geoJson));
+        GetInfoFromJson.setCurrentCondition(this, conditionJson);
+        GetInfoFromJson.setForecast(this, forecastJson);
+
+        mHasInfo = true;
+
+        ChangePreferences preferences = new ChangePreferences(this);
+        Set<String> set = preferences.getCitySet();
+
+        set.add(mWeatherInfor.getmCity());
+        preferences.setCitySet(set);
 
         updateView();
         mPrograssDialog.dismiss();
