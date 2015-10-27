@@ -253,6 +253,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
     }
      */
 
+    /**
     public void updateCompleted(JsonObject geoJson, JsonObject conditionJson, JsonObject forecastJson) {
         mWeatherInfor = WeatherInfo.getInstance(this);
 
@@ -273,6 +274,29 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         mPrograssDialog.dismiss();
 
     }
+     */
+
+    public void updateCompleted(JsonObject allInfo) {
+        mWeatherInfor = WeatherInfo.getInstance(this);
+
+        mWeatherInfor.setmCity(GetInfoFromJson.getCityNameFromJSON(allInfo));
+        mWeatherInfor.setmZip(GetInfoFromJson.getZipFromJSON(allInfo));
+        GetInfoFromJson.setCurrentCondition(this, allInfo);
+        GetInfoFromJson.setForecast(this, allInfo);
+
+        mHasInfo = true;
+
+        ChangePreferences preferences = new ChangePreferences(this);
+        Set<String> set = preferences.getCitySet();
+
+        set.add(mWeatherInfor.getmCity());
+        preferences.setCitySet(set);
+
+        updateView();
+        mPrograssDialog.dismiss();
+
+    }
+
 
     @Override
     public void updateFail() {
