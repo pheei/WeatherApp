@@ -38,6 +38,7 @@ public class GetInfoFromJson {
     public static JsonObject getAllInfo(String input, Context context) throws ExecutionException, InterruptedException {
         String query = "http://api.wunderground.com/api/"+Constants.API_KEY+"/geolookup/conditions/forecast/hourly/q/";
         query += input + ".json";
+        query = query.replace(" ","%20");
         return Ion.with(context).load(query).asJsonObject().get();
     }
 

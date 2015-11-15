@@ -48,6 +48,8 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
         //mWeatherUpdateListener.updateCompleted(mGeo, mCon, mFore);
+        this.cancel();
+
         mWeatherUpdateListener.updateCompleted(mAllInfo);
     }
 
@@ -95,14 +97,12 @@ public class LoadWeatherAsyncTask extends AsyncTask<String, Integer, String> {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (mIsFetchingInfo==true){
+                if (mIsFetchingInfo == true) {
                     cancel();
                 }
             }
         }, TIMEOUT_IN_MS);
 
     }
-
-
 
 }

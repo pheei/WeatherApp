@@ -97,13 +97,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
         super.onResume();
 
-        if (!WeatherInfo.sIsNull){
-            mWeatherInfor = WeatherInfo.getInstance(this);
-            updateView();
-        }
-        else {
-            newUpdate();
-        }
+
     }
 
 
@@ -114,6 +108,14 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         setContentView(R.layout.activity_weather_page);
         mCityPicked = "";
         mLocation = "";
+
+        if (!WeatherInfo.sIsNull){
+            mWeatherInfor = WeatherInfo.getInstance(this);
+            updateView();
+        }
+        else {
+            newUpdate();
+        }
     }
 
     private void currentCityUpdate(){
@@ -203,6 +205,8 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         });
         mPrograssDialog.show();
 
+        Log.i("aaa", mLocation);
+
         mLoadWeatherAsyncTask.execute(mLocation);
     }
 
@@ -211,11 +215,10 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
         mPrograssDialog.dismiss();
         sLongitude = location.getLongitude();
         sLatitude = location.getLatitude();
-        mLocation = Double.toString(sLatitude)+","+Double.toString(sLongitude);
-
-        Log.i("lll",mLocation);
-
-        getWeatherInfo();
+        if (!mLocation.equals(Double.toString(sLatitude)+","+Double.toString(sLongitude))){
+            mLocation = Double.toString(sLatitude)+","+Double.toString(sLongitude);
+            getWeatherInfo();
+        }
     }
 
     @Override
@@ -278,10 +281,15 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
     public void updateCompleted(JsonObject allInfo) {
         mWeatherInfor = WeatherInfo.getInstance(this);
+        Log.i("aaa", allInfo.toString());
+
 
         mWeatherInfor.setmCity(GetInfoFromJson.getCityNameFromJSON(allInfo));
+
         mWeatherInfor.setmZip(GetInfoFromJson.getZipFromJSON(allInfo));
+
         GetInfoFromJson.setCurrentCondition(this, allInfo);
+
         GetInfoFromJson.setForecast(this, allInfo);
 
         mHasInfo = true;
@@ -321,6 +329,7 @@ public class WeatherPageActivity extends AppCompatActivity implements LocationFi
 
             mCityPicked = data.getStringExtra(SettingActivity.CITY_TAG);
             mLocation = locationFormat(mCityPicked);
+            Log.i("aaa", mLocation);
 
             getWeatherInfo();
         }
